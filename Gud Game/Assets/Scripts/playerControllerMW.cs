@@ -40,6 +40,7 @@ public class playerController : MonoBehaviour
         Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDist, Color.red);
 
         movement();
+        sprint();
     }
 
     void movement()
@@ -74,5 +75,36 @@ public class playerController : MonoBehaviour
             playerVel.y = jumpSpeed;
         }
     }
-}
 
+    void sprint()
+    {
+        if (Input.GetButtonDown("Sprint"))
+        {
+            speed *= sprintMod;
+            isSprinting = true;
+        }
+        else if (Input.GetButtonUp("Sprint"))
+        {
+            speed /= sprintMod;
+            isSprinting = false;
+        }
+    }
+
+    void shoot()
+    {
+        shootTimer = 0;
+
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDist, ~ignoreLayer))
+        {
+            Debug.Log(hit.collider);
+
+            IDamageMW dmg = hit.collider.GetComponent<IDamageMW>();
+
+            if (dmg != null)
+            {
+                dmg.takeDamage(shootDamage);
+            }
+        }
+    }
+}
