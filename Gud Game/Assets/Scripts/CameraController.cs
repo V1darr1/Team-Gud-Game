@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour
         if (invertY)
             rotX += mouseY;
         else
-            rotX += mouseY;
+            rotX -= mouseY;
 
         //Clamp the camera on the X axis
         rotX = Mathf.Clamp(rotX, lockVertMin, lockVertMax);
