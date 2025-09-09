@@ -1574,8 +1574,9 @@ MonoBehaviour:
   menuPause: {fileID: 1587551537}
   menuWin: {fileID: 700059265}
   menuLose: {fileID: 970717704}
-  menuOptions: {fileID: 0}
+  menuMain: {fileID: 0}
   playerHPBar: {fileID: 0}
+  playerMPBar: {fileID: 0}
   playerDamageFlash: {fileID: 0}
   player: {fileID: 0}
   isPaused: 0
@@ -4407,7 +4408,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1587551538
 RectTransform:
   m_ObjectHideFlags: 0
