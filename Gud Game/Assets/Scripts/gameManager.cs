@@ -38,15 +38,22 @@ public class gameManager : MonoBehaviour
     }
     private void Start()
     {
-        timeScaleOrig = Time.timeScale;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
 
+        timeScaleOrig = Time.timeScale;
+
+
+        if (menuMain != null) menuMain.SetActive(true);
         if (menuPause != null) menuPause.SetActive(false);
         if (menuWin != null) menuWin.SetActive(false);
         if (menuLose != null) menuLose.SetActive(false);
 
+        menuActive = menuMain;
+        isPaused = true;
+        Time.timeScale = 0f;
 
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
 
@@ -69,6 +76,13 @@ public class gameManager : MonoBehaviour
     public void PauseGame(GameObject menu)
     {
         isPaused = true;
+
+
+        if (menuActive != null)
+        {
+            menuActive.SetActive(false);
+        }
+
         menuActive = menu;
         menuActive.SetActive(true);
         Time.timeScale = 0;
@@ -78,13 +92,40 @@ public class gameManager : MonoBehaviour
     public void UnpauseGame()
     {
         isPaused = false;
-        menuActive.SetActive(false);
+        if (menuActive != null)
+        {
+            // Hides the active menu
+            menuActive.SetActive(false);
+        }
         menuActive = null;
         Time.timeScale = timeScaleOrig;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
+    public Transform playerSpawnPoint;
+    public void RestartGame()
+    {
 
+        UnpauseGame();
+
+
+        if (player != null)
+        {
+
+            player.transform.position = new Vector3(0, 1, 0);
+            player.transform.rotation = Quaternion.identity;
+
+
+            if (playerHPBar != null) playerHPBar.fillAmount = 1f;
+            if (playerMPBar != null) playerMPBar.fillAmount = 1f;
+        }
+
+        gameGoalCount = 0;
+    }
+    public void ReturnToMainMenu()
+    {
+        PauseGame(menuMain);
+    }
     public void OpenWinMenu()
     {
         PauseGame(menuWin);
@@ -93,8 +134,5 @@ public class gameManager : MonoBehaviour
     {
         PauseGame(menuLose);
     }
-    public void OpenMain()
-    {
-        PauseGame(menuMain);
-    }
+
 }

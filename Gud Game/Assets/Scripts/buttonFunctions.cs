@@ -1,35 +1,26 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class buttonFunctions : MonoBehaviour
 {
     public void startGame()
     {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("GameScene");
+        gameManager.instance.UnpauseGame();
     }
 
-    public void maimMenu()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu");
-    }
-
-    public void resume()
+    public void UnpauseGame()
     {
         gameManager.instance.UnpauseGame();
     }
 
-    public void openMain()
+
+
+    public void returnToMainMenu()
     {
-        gameManager.instance.OpenMain();
+        gameManager.instance.ReturnToMainMenu();
     }
-
-    public void restartLevel()
+    public void restartGame()
     {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
+        gameManager.instance.RestartGame();
     }
 
     public void quit()
