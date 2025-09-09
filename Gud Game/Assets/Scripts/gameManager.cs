@@ -12,6 +12,7 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuMain;
 
     public Image playerHPBar;
+    public Image playerMPBar;
     public GameObject playerDamageFlash;
 
     public GameObject player;
