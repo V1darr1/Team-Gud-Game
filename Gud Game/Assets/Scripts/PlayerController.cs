@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
     {
         castTimer += Time.deltaTime;
 
-        if(controller.isGrounded)
+        if (controller.isGrounded)
         {
             jumpCount = 0;
             playerVel = Vector3.zero;
@@ -53,8 +53,8 @@ public class PlayerController : MonoBehaviour
             playerVel.y -= gravity * Time.deltaTime;
         }
 
-            moveDir = (Input.GetAxis("Horizontal") * transform.right)
-                + (Input.GetAxis("Vertical") * transform.forward);
+        moveDir = (Input.GetAxis("Horizontal") * transform.right)
+            + (Input.GetAxis("Vertical") * transform.forward);
 
         controller.Move(moveDir * speed * Time.deltaTime);
 
@@ -63,11 +63,11 @@ public class PlayerController : MonoBehaviour
         controller.Move(playerVel * Time.deltaTime);
 
         //Needs to be tested with damage 
-        if(Input.GetButton("Fire1") && castTimer >= castRate)
+        if (Input.GetButton("Fire1") && castTimer >= castRate)
         {
             castSpell();
         }
-        
+
     }
 
     void jump()
@@ -81,12 +81,12 @@ public class PlayerController : MonoBehaviour
 
     void sprint()
     {
-        if(Input.GetButtonDown("Sprint"))
+        if (Input.GetButtonDown("Sprint"))
         {
             speed *= sprintMod;
             isSprinting = true;
         }
-        else if(Input.GetButtonUp("Sprint"))
+        else if (Input.GetButtonUp("Sprint"))
         {
             speed /= sprintMod;
             isSprinting = false;
@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour
         castTimer = 0;
 
         RaycastHit hit;
-        if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, castDist, ~ignoreLayer))
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, castDist, ~ignoreLayer))
         {
             Debug.Log(hit.collider.name);
         }

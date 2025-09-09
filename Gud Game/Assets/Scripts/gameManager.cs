@@ -5,61 +5,57 @@ public class gameManager : MonoBehaviour
 {
     public static gameManager instance;
 
-    [SerializeField] GameObject menuActive;
+    // References to your menu UI panels
+    [SerializeField] GameObject menuMain;
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
-    [SerializeField] GameObject menuMain;
+
+    [HideInInspector] public GameObject menuActive;
 
     public Image playerHPBar;
     public Image playerMPBar;
     public GameObject playerDamageFlash;
 
     public GameObject player;
+    public Transform playerSpawnPoint; // A reference to the player's start position
 
     public bool isPaused;
-
     int gameGoalCount;
-
     float timeScaleOrig;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            // Removed DontDestroyOnLoad as it's not needed for a single-scene setup.
         }
         else
         {
             Destroy(gameObject);
         }
     }
+
     private void Start()
     {
-
         timeScaleOrig = Time.timeScale;
 
-
+        // On game start, show the main menu and hide all others.
         if (menuMain != null) menuMain.SetActive(true);
         if (menuPause != null) menuPause.SetActive(false);
         if (menuWin != null) menuWin.SetActive(false);
         if (menuLose != null) menuLose.SetActive(false);
 
+        // Set the main menu as the active one and pause the game
         menuActive = menuMain;
         isPaused = true;
         Time.timeScale = 0f;
-
-
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
     }
 
-
-    // Update is called once per frame
     void Update()
     {
+        // Listen for the "Escape" key to toggle the pause menu
         if (Input.GetButtonDown("Cancel"))
         {
             if (menuActive == null)
@@ -77,7 +73,6 @@ public class gameManager : MonoBehaviour
     {
         isPaused = true;
 
-
         if (menuActive != null)
         {
             menuActive.SetActive(false);
@@ -89,32 +84,31 @@ public class gameManager : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
+
     public void UnpauseGame()
     {
         isPaused = false;
+
         if (menuActive != null)
         {
-            // Hides the active menu
             menuActive.SetActive(false);
         }
+
         menuActive = null;
         Time.timeScale = timeScaleOrig;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
-    public Transform playerSpawnPoint;
+
+    // This function restarts the game by resetting the player
     public void RestartGame()
     {
-
         UnpauseGame();
 
-
-        if (player != null)
+        if (player != null && playerSpawnPoint != null)
         {
-
-            player.transform.position = new Vector3(0, 1, 0);
-            player.transform.rotation = Quaternion.identity;
-
+            player.transform.position = playerSpawnPoint.position;
+            player.transform.rotation = playerSpawnPoint.rotation;
 
             if (playerHPBar != null) playerHPBar.fillAmount = 1f;
             if (playerMPBar != null) playerMPBar.fillAmount = 1f;
@@ -122,17 +116,19 @@ public class gameManager : MonoBehaviour
 
         gameGoalCount = 0;
     }
+
     public void ReturnToMainMenu()
     {
         PauseGame(menuMain);
     }
+
     public void OpenWinMenu()
     {
         PauseGame(menuWin);
     }
+
     public void OpenLoseMenu()
     {
         PauseGame(menuLose);
     }
-
 }

@@ -7,20 +7,19 @@ public class buttonFunctions : MonoBehaviour
         gameManager.instance.UnpauseGame();
     }
 
-    public void UnpauseGame()
+    public void resume()
     {
         gameManager.instance.UnpauseGame();
     }
 
-
+    public void restartGame()
+    {
+        gameManager.instance.RestartGame();
+    }
 
     public void returnToMainMenu()
     {
         gameManager.instance.ReturnToMainMenu();
-    }
-    public void restartGame()
-    {
-        gameManager.instance.RestartGame();
     }
 
     public void quit()
