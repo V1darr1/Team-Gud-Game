@@ -3,23 +3,32 @@ using UnityEngine.SceneManagement;
 
 public class buttonFunctions : MonoBehaviour
 {
-    public void resume()
-    {
-
-    }
-
     public void startGame()
     {
-
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("GameScene");
     }
 
-    public void loadGame() 
-    { 
-    
-    }
-
-    public void settings()
+    public void maimMenu()
     {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void resume()
+    {
+        gameManager.instance.UnpauseGame();
+    }
+
+    public void openMain()
+    {
+        gameManager.instance.OpenMain();
+    }
+
+    public void restartLevel()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
     }
 
