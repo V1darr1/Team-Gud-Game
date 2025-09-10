@@ -1,44 +1,39 @@
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 
-public class CameraController : MonoBehaviour
+public class cameraControl : MonoBehaviour
 {
     [SerializeField] int sens;
-    [SerializeField] int lockVertMin, lockVertMax;
+    [SerializeField] int lockVertMin, LockVertMax;
     [SerializeField] bool invertY;
 
-    float rotX;
+    float rotateX;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //skip look input when paused or a menu is active
-        if(gameManager.instance != null && (gameManager.instance.isPaused || gameManager.instance.menuActive != null))
-        {
-            return;
-        }
-
         //get input
         float mouseX = Input.GetAxisRaw("Mouse X") * sens * Time.deltaTime;
         float mouseY = Input.GetAxisRaw("Mouse Y") * sens * Time.deltaTime;
-
-        //use invert Y to give option to look up/down
+        //inverseY Check
         if (invertY)
-            rotX += mouseY;
+            rotateX += mouseY;
         else
-            rotX -= mouseY;
+            rotateX -= mouseY;
+        //Clamp the camera on the Axis (to avoid inverting camera)
+        rotateX = Mathf.Clamp(rotateX, lockVertMin, LockVertMax);
 
-        //Clamp the camera on the X axis
-        rotX = Mathf.Clamp(rotX, lockVertMin, lockVertMax);
+        //rotate camera up/down
+        transform.localRotation = Quaternion.Euler(rotateX, 0, 0);
 
-        //rotate the camera to look up and down
-        transform.localRotation = Quaternion.Euler(rotX, 0, 0);
-
-        //rotate the player to look left and right
+        //rotate player for left/right
         transform.parent.Rotate(Vector3.up * mouseX);
+
     }
 }

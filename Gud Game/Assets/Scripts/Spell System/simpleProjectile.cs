@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 //[RequireComponent(typeof(Collider))] // Ensures there is ALWAYS a Collider on this object.
@@ -47,22 +48,18 @@ public class SimpleProjectile : MonoBehaviour
     /// Triggered when our trigger-collider touches another collider.
     /// Note: This requires our Collider to have "Is Trigger" checked.
     /// </summary>
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
-        // Find an IDamageable component on the thing we hit (or its parents).
-        var damageable = other.collider.GetComponentInParent<iDamageable>();
+        if (other.isTrigger) return; // Exit if Trigger
 
-        // If the target can take damage and is still alive, apply damage.
-        if (damageable != null && damageable.IsAlive)
-        {
-            damageable.ApplyDamage(_damage);
-        }
-
-        // (Optional) You can spawn impact VFX/SFX here later.
-
-        // Destroy the projectile after any hit to keep it simple.
+        Debug.Log(other.name);
+        iDamageable dmg = other.GetComponent<iDamageable>();
+        if (dmg != null && dmg.IsAlive) { dmg.ApplyDamage(_damage);} //Debug name to Log / Apply Damage
         Destroy(gameObject);
+
+
     }
+ 
 
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
