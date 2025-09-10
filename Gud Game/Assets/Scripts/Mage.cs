@@ -9,8 +9,7 @@ public class SkeletonMage : MonoBehaviour
     private NavMeshAgent agent;
     private Animator animator;
 
-   [SerializeField] float maxHealth = 50f;
-   [SerializeField] float currentHealth;
+  
    [SerializeField] float detectionRange = 12f;
    [SerializeField] float attackRange = 8f;
    [SerializeField] float attackCooldown = 2f;
@@ -21,9 +20,13 @@ public class SkeletonMage : MonoBehaviour
     private bool isDead = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
+<<<<<<< Updated upstream
     {
         player = GameObject.FindWithTag("Player");
         currentHealth = maxHealth;
+=======
+    {       
+>>>>>>> Stashed changes
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
     }
@@ -90,18 +93,7 @@ public class SkeletonMage : MonoBehaviour
         }
         Destroy(spell, 5f);
     }
-    public void IsHit(float dmg)
-    {
-        if (isDead ) return;
-
-        currentHealth -= dmg;
-        if (animator) animator.SetTrigger("Hit");
-       
-if(currentHealth <=0f)
-        {
-            StartCoroutine(DeathRoutine());
-        }
-    }
+   
    private IEnumerator DeathRoutine()
     {
         isDead = true;

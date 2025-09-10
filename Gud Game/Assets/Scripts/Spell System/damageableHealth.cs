@@ -49,7 +49,7 @@ public class DamageableHealth : MonoBehaviour, iDamageable
         Debug.Log($"{name} died.");
 
         if (destroyOnDeath)
-        {
+        { 
             // Destroy this entire GameObject (basic behavior).
             // If you have a ragdoll or animation, replace this with custom logic.
             Destroy(gameObject);
