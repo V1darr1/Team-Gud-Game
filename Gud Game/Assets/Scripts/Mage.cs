@@ -20,13 +20,9 @@ public class SkeletonMage : MonoBehaviour
     private bool isDead = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
-<<<<<<< Updated upstream
     {
         player = GameObject.FindWithTag("Player");
-        currentHealth = maxHealth;
-=======
-    {       
->>>>>>> Stashed changes
+    
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
     }
