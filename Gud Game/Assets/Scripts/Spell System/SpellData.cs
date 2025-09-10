@@ -32,6 +32,7 @@ public class SpellData : ScriptableObject, iSpell
     [Tooltip("Projectile prefab to spawn when casting. Leave empty for hitscan-style spells.")]
     [SerializeField] private GameObject projectilePrefab;
 
+
     // --- ISpell interface implementation (read-only public access) ---
     public string Id => id;
     public float ManaCost => manaCost;

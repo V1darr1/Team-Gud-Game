@@ -354,7 +354,7 @@ Transform:
   m_GameObject: {fileID: 322242719}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.06744, y: 1, z: 21.04076}
+  m_LocalPosition: {x: 4.06744, y: 1.52, z: 21.04076}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -649,6 +649,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 640123644277095862, guid: 0f215b1dacaef834d99413ad1e76dfc7, type: 3}
+      propertyPath: speed
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 640123644277095862, guid: 0f215b1dacaef834d99413ad1e76dfc7, type: 3}
+      propertyPath: maxMana
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 640123644277095862, guid: 0f215b1dacaef834d99413ad1e76dfc7, type: 3}
+      propertyPath: primarySpell
+      value: 
+      objectReference: {fileID: 11400000, guid: be97d3da2398aee40bde8287166191f8, type: 2}
+    - target: {fileID: 640123644277095862, guid: 0f215b1dacaef834d99413ad1e76dfc7, type: 3}
+      propertyPath: equippedSpell
+      value: 
+      objectReference: {fileID: 11400000, guid: be97d3da2398aee40bde8287166191f8, type: 2}
     - target: {fileID: 6292071718551159018, guid: 0f215b1dacaef834d99413ad1e76dfc7, type: 3}
       propertyPath: m_Name
       value: Player
