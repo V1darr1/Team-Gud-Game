@@ -1,9 +1,12 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class gameManager : MonoBehaviour
 {
     public static gameManager instance;
+
+    private static bool bootToMainMenu = true;
 
     // References to your menu UI panels
     [SerializeField] GameObject menuMain;
@@ -34,38 +37,52 @@ public class gameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this) instance = null;
     }
 
     private void Start()
     {
         timeScaleOrig = Time.timeScale;
 
-        // On game start, show the main menu and hide all others.
         if (menuMain != null) menuMain.SetActive(true);
         if (menuPause != null) menuPause.SetActive(false);
         if (menuWin != null) menuWin.SetActive(false);
         if (menuLose != null) menuLose.SetActive(false);
 
-        // Set the main menu as the active one and pause the game
-        menuActive = menuMain;
-        isPaused = true;
-        Time.timeScale = 0f;
+        if(bootToMainMenu)
+        {
+            if (menuMain) menuMain.SetActive(true);
+            menuActive = menuMain;
+            isPaused = true;
+            Time.timeScale = 0f;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            menuActive = null;
+            isPaused = false;
+            Time.timeScale = 1f;
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+
+            if (playerHPBar) playerHPBar.fillAmount = 1f;
+            if (playerMPBar) playerMPBar.fillAmount = 1f;
+        }
     }
 
     void Update()
     {
-        // Listen for the "Escape" key to toggle the pause menu
-        if (Input.GetButtonDown("Cancel"))
+        if(Input.GetButtonDown("Cancel"))
         {
-            if (menuActive == null)
-            {
-                PauseGame(menuPause);
-            }
-            else if (menuActive == menuPause)
-            {
-                UnpauseGame();
-            }
+            if (menuActive == null) PauseGame(menuPause);
+            else if (menuActive == menuPause) UnpauseGame();
         }
     }
 
@@ -73,13 +90,11 @@ public class gameManager : MonoBehaviour
     {
         isPaused = true;
 
-        if (menuActive != null)
-        {
-            menuActive.SetActive(false);
-        }
+        if(menuActive) menuActive.SetActive(false);
 
         menuActive = menu;
-        menuActive.SetActive(true);
+        if (menuActive) menuActive.SetActive(true);
+
         Time.timeScale = 0;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -89,37 +104,24 @@ public class gameManager : MonoBehaviour
     {
         isPaused = false;
 
-        if (menuActive != null)
-        {
-            menuActive.SetActive(false);
-        }
-
+        if (menuActive) menuActive.SetActive(false);
         menuActive = null;
+
         Time.timeScale = timeScaleOrig;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
-
-    // This function restarts the game by resetting the player
-    public void RestartGame()
-    {
-        UnpauseGame();
-
-        if (player != null && playerSpawnPoint != null)
-        {
-            player.transform.position = playerSpawnPoint.position;
-            player.transform.rotation = playerSpawnPoint.rotation;
-
-            if (playerHPBar != null) playerHPBar.fillAmount = 1f;
-            if (playerMPBar != null) playerMPBar.fillAmount = 1f;
-        }
-
-        gameGoalCount = 0;
-    }
-
+   
     public void ReturnToMainMenu()
     {
-        PauseGame(menuMain);
+        bootToMainMenu = true;
+        Time.timeScale = 1f;
+        isPaused = false;
+        menuActive = null;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
     }
 
     public void OpenWinMenu()
