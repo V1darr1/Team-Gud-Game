@@ -3,7 +3,7 @@ using UnityEngine.AI;
 using System.Collections;
 public class SkeletonMage : MonoBehaviour
 {
-    public Transform player;
+    public GameObject player;
     public GameObject projectilePrefab;
     public Transform castPoint;
     private NavMeshAgent agent;
@@ -22,6 +22,7 @@ public class SkeletonMage : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        player = GameObject.FindWithTag("Player");
         currentHealth = maxHealth;
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
@@ -32,11 +33,11 @@ public class SkeletonMage : MonoBehaviour
     {
         if(isDead) return;
 
-        float distance = Vector3.Distance(transform.position, player.position);
+        float distance = Vector3.Distance(transform.position, player.transform.position);
 
         if(distance <= detectionRange)
         {
-            agent.SetDestination(player.position);
+            agent.SetDestination(player.transform.position);
 
             if (distance <= attackRange)
             {
@@ -59,7 +60,7 @@ public class SkeletonMage : MonoBehaviour
     }
     void FaceTarget()
     {
-        Vector3 direction = (player.position - transform.position).normalized;
+        Vector3 direction = (player.transform.position - transform.position).normalized;
         direction.y = 0;
         Quaternion lookRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
@@ -84,7 +85,7 @@ public class SkeletonMage : MonoBehaviour
 
             rb.linearVelocity = Vector3.zero;
 
-            Vector3 direction = (player.position - castPoint.position).normalized;
+            Vector3 direction = (player.transform.position - castPoint.position).normalized;
             rb.linearVelocity = direction * projectileSpeed;
         }
         Destroy(spell, 5f);
