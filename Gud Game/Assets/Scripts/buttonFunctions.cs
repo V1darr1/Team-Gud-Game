@@ -12,11 +12,6 @@ public class buttonFunctions : MonoBehaviour
         gameManager.instance.UnpauseGame();
     }
 
-    public void restartGame()
-    {
-        gameManager.instance.RestartGame();
-    }
-
     public void returnToMainMenu()
     {
         gameManager.instance.ReturnToMainMenu();
