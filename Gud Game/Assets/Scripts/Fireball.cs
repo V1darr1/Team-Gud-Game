@@ -9,13 +9,16 @@ public class Fireball : MonoBehaviour
     {
         Destroy(gameObject,lifeTime);
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if(collision.gameObject.CompareTag("Player"))
+        if (other.isTrigger) return;
+       iDamageable dmg = other.GetComponent<iDamageable>();
+        if (other.gameObject.CompareTag("Player") && dmg != null)
         {
-            Debug.Log("Fireball hit");
+            dmg.ApplyDamage(damage);
         }
         Destroy(gameObject);
+
     }
     // Update is called once per frame
     void Update()
