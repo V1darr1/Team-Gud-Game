@@ -13,6 +13,8 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
+    [SerializeField] GameObject settingsMenu;
+    [SerializeField] Camera mainCam;
 
     [HideInInspector] public GameObject menuActive;
 
@@ -24,8 +26,12 @@ public class gameManager : MonoBehaviour
     public Transform playerSpawnPoint; // A reference to the player's start position
 
     public bool isPaused;
+    public bool yInvertON;
+    public bool yInvertOFF;
+
     int gameGoalCount;
     float timeScaleOrig;
+
 
     void Awake()
     {
@@ -124,6 +130,14 @@ public class gameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
     }
 
+    public void ReturnToPauseMenu(GameObject menu)
+    {
+        PauseGame(menu);
+
+        var cam = mainCam != null ? mainCam : Camera.main;
+        if (cam != null) cam.ResetProjectionMatrix();
+    }
+
     public void OpenWinMenu()
     {
         PauseGame(menuWin);
@@ -132,5 +146,10 @@ public class gameManager : MonoBehaviour
     public void OpenLoseMenu()
     {
         PauseGame(menuLose);
+    }
+
+    public void OpenSettingsMenu()
+    {
+        PauseGame(settingsMenu);
     }
 }

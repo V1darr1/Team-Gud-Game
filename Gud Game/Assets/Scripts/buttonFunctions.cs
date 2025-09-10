@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class buttonFunctions : MonoBehaviour
 {
+    [SerializeField] private CameraController cameraController;
+
     public void startGame()
     {
         gameManager.instance.UnpauseGame();
@@ -15,6 +17,21 @@ public class buttonFunctions : MonoBehaviour
     public void returnToMainMenu()
     {
         gameManager.instance.ReturnToMainMenu();
+    }
+
+    public void openSettingsMenu()
+    {
+        gameManager.instance.OpenSettingsMenu();
+    }
+
+    public void InvertYOn()
+    {
+        if(cameraController != null) cameraController.SetInvertY(true);
+    }
+
+    public void InvertYOff()
+    {
+        if (cameraController != null) cameraController.SetInvertY(false);
     }
 
     public void quit()
