@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))] // Ensures there is ALWAYS a Collider on this object.
+//[RequireComponent(typeof(Collider))] // Ensures there is ALWAYS a Collider on this object.
 public class SimpleProjectile : MonoBehaviour
 {
     [Header("Movement")]
@@ -47,10 +47,10 @@ public class SimpleProjectile : MonoBehaviour
     /// Triggered when our trigger-collider touches another collider.
     /// Note: This requires our Collider to have "Is Trigger" checked.
     /// </summary>
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
         // Find an IDamageable component on the thing we hit (or its parents).
-        var damageable = other.GetComponentInParent<iDamageable>();
+        var damageable = other.collider.GetComponentInParent<iDamageable>();
 
         // If the target can take damage and is still alive, apply damage.
         if (damageable != null && damageable.IsAlive)
