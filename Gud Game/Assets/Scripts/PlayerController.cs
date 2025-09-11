@@ -1,11 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour, iSpellCaster
+public class PlayerController : MonoBehaviour, iSpellCaster, IDamage
 {
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] CharacterController controller;
     [SerializeField] int speed, sprintMod, jumpSpeed, jumpMax, gravity;
+    [SerializeField] int HP;
 
     [Header("Resources")]
     [Tooltip("Maximum mana the caster can hold.")]
@@ -24,6 +25,7 @@ public class PlayerController : MonoBehaviour, iSpellCaster
 
     private int jumpCount;
     private bool isSprinting, sprintToggle;
+    int HPOrig;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -157,6 +159,17 @@ public class PlayerController : MonoBehaviour, iSpellCaster
             // If you rename the projectile script later, update this type here.
             Debug.LogWarning("Spawned projectile is missing FireboltProjectile component.");
         }
+    }
+
+    public void takeDamage(int amount)
+    {
+        HP -= amount;
+        
+    }
+
+    public void updatePlayerUI()
+    {
+        gameManager.instance.playerHPBar.fillAmount = (float)HP / HPOrig;
     }
 
     //Expose current health for UI.

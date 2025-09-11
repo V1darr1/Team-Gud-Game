@@ -45,19 +45,18 @@ public class enemyAI : MonoBehaviour, IDamage
 
     void Start()
     {
-        colorOrig = model.material.color;
-        gamemanager.instance.updateGameGoal(1);
+        gameManager.instance.updateGameGoal(1);
         ToggleWeapon(false); 
     }
 
     void Update()
     {
-        var player = gamemanager.instance.player;
+        var player = gameManager.instance.player;
         if (!player) return;
 
-        // Compute distance/range flags each frame (minimal addition)
+        
         float dist = Vector3.Distance(transform.position, player.transform.position);
-        playerInSightRange = dist <= sightRange && canSeePlayer(); // needs LOS + FOV
+        playerInSightRange = dist <= sightRange && canSeePlayer(); 
         playerInAttackRange = dist <= attackRange;
 
         if (playerInTrigger && playerInSightRange)
@@ -77,7 +76,7 @@ public class enemyAI : MonoBehaviour, IDamage
 
     bool canSeePlayer()
     {
-        var player = gamemanager.instance.player;
+        var player = gameManager.instance.player;
         if (!player) return false;
 
         playerDir = player.transform.position - headPos.position;
@@ -165,7 +164,7 @@ public class enemyAI : MonoBehaviour, IDamage
     void ChasePlayer()
     {
        
-        var player = gamemanager.instance.player;
+        var player = gameManager.instance.player;
         if (player) agent.SetDestination(player.transform.position);
     }
 
@@ -183,7 +182,7 @@ public class enemyAI : MonoBehaviour, IDamage
 
     void faceTarget()
     {
-        var player = gamemanager.instance.player;
+        var player = gameManager.instance.player;
         if (!player) return;
 
         Vector3 flatDir = player.transform.position - transform.position;
@@ -214,7 +213,7 @@ public class enemyAI : MonoBehaviour, IDamage
         }
         if (HP <= 0)
         {
-            gamemanager.instance.updateGameGoal(-1);
+            gameManager.instance.updateGameGoal(-1);
             Destroy(gameObject);
         }
     }
