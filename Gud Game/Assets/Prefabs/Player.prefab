@@ -164,6 +164,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4906103790821669602}
   - component: {fileID: 6776281753082686767}
+  - component: {fileID: 1909963999102854683}
   - component: {fileID: 5571344462708334439}
   - component: {fileID: 5338664961810804231}
   - component: {fileID: 701322391235236936}
@@ -214,6 +215,21 @@ MonoBehaviour:
   manaMax: 100
   manaRegenPerSec: 10
   primarySpell: {fileID: 11400000, guid: be97d3da2398aee40bde8287166191f8, type: 2}
+--- !u!114 &1909963999102854683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7176983156523098228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73af299630d4bad439e3c0eec5107ebf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageableHealth
+  maxHealth: 100
+  destroyOnDeath: 0
+  canBeHealed: 1
 --- !u!143 &5571344462708334439
 CharacterController:
   m_ObjectHideFlags: 0
