@@ -164,6 +164,11 @@ public class PlayerController : MonoBehaviour, iSpellCaster, IDamage
     public void takeDamage(int amount)
     {
         HP -= amount;
+        updatePlayerUI();
+        if(HP <= 0)
+        {
+            gameManager.instance.OpenLoseMenu();
+        }
         
     }
 
