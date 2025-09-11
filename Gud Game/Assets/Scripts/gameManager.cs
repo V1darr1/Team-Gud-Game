@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -136,6 +137,11 @@ public class gameManager : MonoBehaviour
 
         var cam = mainCam != null ? mainCam : Camera.main;
         if (cam != null) cam.ResetProjectionMatrix();
+    }
+
+    public void updateGameGoal(int amount)
+    {
+
     }
 
     public void OpenWinMenu()
