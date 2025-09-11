@@ -27,7 +27,7 @@ namespace FireballMovement
             {
                 timer += Time.deltaTime;
                 _fireballTrails.enabled = true;
-                _fireball.AddRelativeForce(new Vector3(_moveSpeed, 0, 0));
+                _fireball.AddRelativeForce( Vector3.forward * _moveSpeed);
             }
             else if (timer >= delay)
             {
