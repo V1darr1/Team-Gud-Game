@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpellData
   id: firebolt
   manaCost: 10
-  cooldown: 0.5
+  cooldown: 1.5
   damage: 25
-  projectilePrefab: {fileID: 4375970878291645958, guid: 94acfdc67c279264a91af82f3fd28661, type: 3}
+  projectilePrefab: {fileID: 8069041786549752062, guid: 57774967ba1669c4e8dd957015179090, type: 3}

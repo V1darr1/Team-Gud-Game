@@ -47,6 +47,7 @@ public class enemyAI : MonoBehaviour, iEnemy
     {
         gameManager.instance.updateGameGoal(1);
         ToggleWeapon(false); 
+        model = gameObject.GetComponent<Renderer>();
     }
 
     void Update()
@@ -218,6 +219,7 @@ public class enemyAI : MonoBehaviour, iEnemy
 
     IEnumerator flashRed()
     {
+        if(model == null) { yield return null; }
         model.material.color = Color.red;
         yield return new WaitForSeconds(0.1f);
         model.material.color = colorOrig;
