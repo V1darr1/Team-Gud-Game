@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour, iSpellCaster, IDamage
+public class PlayerController : MonoBehaviour, iSpellCaster, IDamageable
 {
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] CharacterController controller;
