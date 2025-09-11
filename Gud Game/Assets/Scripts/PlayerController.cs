@@ -30,6 +30,9 @@ public class PlayerController : MonoBehaviour, iSpellCaster, IDamage
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        HPOrig = HP;
+        updatePlayerUI();
+        
         controller = GetComponent<CharacterController>();
         _mana = manaMax;
     }
@@ -165,6 +168,8 @@ public class PlayerController : MonoBehaviour, iSpellCaster, IDamage
     {
         HP -= amount;
         updatePlayerUI();
+        StartCoroutine(flashDamage());
+
         if(HP <= 0)
         {
             gameManager.instance.OpenLoseMenu();
@@ -175,6 +180,13 @@ public class PlayerController : MonoBehaviour, iSpellCaster, IDamage
     public void updatePlayerUI()
     {
         gameManager.instance.playerHPBar.fillAmount = (float)HP / HPOrig;
+    }
+
+    IEnumerator flashDamage()
+    {
+        gameManager.instance.playerDamageFlash.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        gameManager.instance.playerDamageFlash.SetActive(false);
     }
 
     //Expose current health for UI.
