@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour, iSpellCaster, IDamage
+public class PlayerController : MonoBehaviour, iSpellCaster, iDamageable
 {
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] CharacterController controller;
     [SerializeField] int speed, sprintMod, jumpSpeed, jumpMax, gravity;
-    [SerializeField] int HP;
+    [SerializeField] float HP;
 
     [Header("Resources")]
     [Tooltip("Maximum mana the caster can hold.")]
@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour, iSpellCaster, IDamage
 
     private int jumpCount;
     private bool isSprinting, sprintToggle;
-    int HPOrig;
+    float HPOrig;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -164,22 +164,10 @@ public class PlayerController : MonoBehaviour, iSpellCaster, IDamage
         }
     }
 
-    public void takeDamage(int amount)
-    {
-        HP -= amount;
-        updatePlayerUI();
-        StartCoroutine(flashDamage());
-
-        if(HP <= 0)
-        {
-            gameManager.instance.OpenLoseMenu();
-        }
-        
-    }
-
     public void updatePlayerUI()
     {
         gameManager.instance.playerHPBar.fillAmount = (float)HP / HPOrig;
+        gameManager.instance.playerMPBar.fillAmount = _mana / manaMax;
     }
 
     IEnumerator flashDamage()
@@ -189,8 +177,22 @@ public class PlayerController : MonoBehaviour, iSpellCaster, IDamage
         gameManager.instance.playerDamageFlash.SetActive(false);
     }
 
+    public void ApplyDamage(float amount)
+    {
+        HP -= amount;
+        updatePlayerUI();
+        StartCoroutine(flashDamage());
+
+        if (HP <= 0)
+        {
+            gameManager.instance.OpenLoseMenu();
+        }
+    }
+
     //Expose current health for UI.
     public float CurrentMana => _mana;
     public float MaxMana => manaMax;
     public float CooldownRemaining => Mathf.Max(0f, _cooldownTimer);
+
+    public bool IsAlive => throw new System.NotImplementedException();
 }
