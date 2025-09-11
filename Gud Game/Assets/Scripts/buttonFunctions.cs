@@ -2,15 +2,44 @@ using UnityEngine;
 
 public class buttonFunctions : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private CameraController cameraController;
+
+    public void startGame()
     {
-        
+        gameManager.instance.UnpauseGame();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void resume()
     {
-        
+        gameManager.instance.UnpauseGame();
+    }
+
+    public void returnToMainMenu()
+    {
+        gameManager.instance.ReturnToMainMenu();
+    }
+
+    public void openSettingsMenu()
+    {
+        gameManager.instance.OpenSettingsMenu();
+    }
+
+    public void InvertYOn()
+    {
+        if(cameraController != null) cameraController.SetInvertY(true);
+    }
+
+    public void InvertYOff()
+    {
+        if (cameraController != null) cameraController.SetInvertY(false);
+    }
+
+    public void quit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }
