@@ -16,7 +16,6 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject settingsMenu;
     [SerializeField] Camera mainCam;
-    [SerializeField] PlayerController playerController;
 
     [HideInInspector] public GameObject menuActive;
 
@@ -158,29 +157,5 @@ public class gameManager : MonoBehaviour
     public void OpenSettingsMenu()
     {
         PauseGame(settingsMenu);
-    }
-
-    void InitBarsFull()
-    {
-        isPaused = false;
-
-        if(menuActive) menuActive.SetActive(false);
-        menuActive = null;
-
-        Time.timeScale = timeScaleOrig;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
-        InitBarsFull();
-    }
-
-    private void LateUpdate()
-    {
-        if (!isPaused && playerController != null)
-        {
-            float mp = playerController.CurrentMana;
-            float mpMax = playerController.MaxMana;
-            playerMPBar.fillAmount = (mpMax > 0f) ? Mathf.Clamp01(mp / mpMax) : 0f;
-        }
     }
 }
