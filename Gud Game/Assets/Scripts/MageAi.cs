@@ -18,6 +18,7 @@ public class MageAi : MonoBehaviour
     [SerializeField] private float sightRange = 12f;
     [SerializeField] private float attackRange = 12f;
     [SerializeField] private float attackCooldown = 1.5f;
+    [SerializeField] private float projectileSpeed = 10f;
 
     private bool alreadyAttacked;
     private bool isDead = false;
@@ -99,8 +100,8 @@ public class MageAi : MonoBehaviour
     {
         if (animator) animator.SetTrigger("Cast");
 
-        Vector3 spawnPos = castPoint.position + castPoint.forward * 2.0f;
-        GameObject spell = Instantiate(projectilePrefab, spawnPos, castPoint.rotation);
+        Vector3 direction = (gameManager.instance.player.transform.position - castPoint.position).normalized;
+        GameObject spell = Instantiate(projectilePrefab, castPoint.position, Quaternion.LookRotation(direction));
 
         Collider mageCol = GetComponent<Collider>();
         Collider spellCol = spell.GetComponent<Collider>();
@@ -108,7 +109,11 @@ public class MageAi : MonoBehaviour
         if (mageCol && spellCol)
             Physics.IgnoreCollision(mageCol, spellCol);
 
-        Debug.Log("Fireball spawned at: " + spawnPos);
+        Rigidbody rb = spell.GetComponent<Rigidbody>();
+        if(rb)
+        {
+            rb.linearVelocity = direction * projectileSpeed;
+        }
 
         if (spellCol)
             StartCoroutine(EnableColliderAfterDelay(spellCol, 0.5f));
