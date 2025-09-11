@@ -1031,6 +1031,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1179867769567022138}
   - component: {fileID: 3450522097142680247}
+  - component: {fileID: 2817771253188848940}
   - component: {fileID: 4375967951587134555}
   - component: {fileID: 8988126197115344629}
   - component: {fileID: 6872027312425041226}
@@ -1084,6 +1085,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2817771253188848940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6519082826324793324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73af299630d4bad439e3c0eec5107ebf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageableHealth
+  maxHealth: 100
+  destroyOnDeath: 1
+  canBeHealed: 0
 --- !u!114 &4375967951587134555
 MonoBehaviour:
   m_ObjectHideFlags: 0

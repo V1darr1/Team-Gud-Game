@@ -1,12 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour, iSpellCaster, iDamageable
+public class PlayerController : MonoBehaviour, iSpellCaster
 {
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] CharacterController controller;
     [SerializeField] int speed, sprintMod, jumpSpeed, jumpMax, gravity;
-    [SerializeField] float HP;
 
     [Header("Resources")]
     [Tooltip("Maximum mana the caster can hold.")]
@@ -25,14 +24,10 @@ public class PlayerController : MonoBehaviour, iSpellCaster, iDamageable
 
     private int jumpCount;
     private bool isSprinting, sprintToggle;
-    float HPOrig;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        HPOrig = HP;
-        updatePlayerUI();
-        
         controller = GetComponent<CharacterController>();
         _mana = manaMax;
     }
@@ -164,12 +159,6 @@ public class PlayerController : MonoBehaviour, iSpellCaster, iDamageable
         }
     }
 
-    public void updatePlayerUI()
-    {
-        gameManager.instance.playerHPBar.fillAmount = (float)HP / HPOrig;
-        gameManager.instance.playerMPBar.fillAmount = _mana / manaMax;
-    }
-
     IEnumerator flashDamage()
     {
         gameManager.instance.playerDamageFlash.SetActive(true);
@@ -177,22 +166,9 @@ public class PlayerController : MonoBehaviour, iSpellCaster, iDamageable
         gameManager.instance.playerDamageFlash.SetActive(false);
     }
 
-    public void ApplyDamage(float amount)
-    {
-        HP -= amount;
-        updatePlayerUI();
-        StartCoroutine(flashDamage());
-
-        if (HP <= 0)
-        {
-            gameManager.instance.OpenLoseMenu();
-        }
-    }
 
     //Expose current health for UI.
     public float CurrentMana => _mana;
     public float MaxMana => manaMax;
     public float CooldownRemaining => Mathf.Max(0f, _cooldownTimer);
-
-    public bool IsAlive => throw new System.NotImplementedException();
 }

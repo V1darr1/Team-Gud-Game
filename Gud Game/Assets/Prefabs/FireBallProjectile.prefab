@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f4bf7a5e32ddbd49ae600ca9a4e6b42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::damage
-  type: 3
+  type: 0
   rb: {fileID: 8344153604978128790}
   damageAmount: 15
   damageRate: 0

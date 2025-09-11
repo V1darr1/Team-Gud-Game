@@ -107,6 +107,9 @@ PrefabInstance:
       addedObject: {fileID: 3704398219898251529}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 762831533744119428}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 115360357360063412}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d8406633eeb60848a85c74ead8a28a8, type: 3}
       insertIndex: -1
@@ -154,6 +157,21 @@ MonoBehaviour:
   sightRange: 12
   attackRange: 8
   attackCooldown: 1.5
+--- !u!114 &762831533744119428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2605820348129566534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73af299630d4bad439e3c0eec5107ebf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageableHealth
+  maxHealth: 100
+  destroyOnDeath: 1
+  canBeHealed: 0
 --- !u!95 &115360357360063412
 Animator:
   serializedVersion: 7
