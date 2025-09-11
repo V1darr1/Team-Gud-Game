@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.AI;
 
 
-public class enemyAI : MonoBehaviour, IDamage
+public class enemyAI : MonoBehaviour, IDamageable
 {
     [SerializeReference] NavMeshAgent agent;
     [SerializeField] Renderer model;
@@ -45,9 +45,44 @@ public class enemyAI : MonoBehaviour, IDamage
 
     void Start()
     {
+
         gameManager.instance.updateGameGoal(1);
-        ToggleWeapon(false); 
+        ToggleWeapon(false);
+
+        if (weaponHitboxRoot)
+        {
+            foreach (var hb in weaponHitboxRoot.GetComponentsInChildren<EnemyWeaponHitbox>(true))
+            {
+                hb.owner = this;
+                hb.damage = damage;
+            }
+        }
+        AutoWireWeaponHitboxes();
     }
+
+    void AutoWireWeaponHitboxes()
+    {
+        if (!weaponHitboxRoot)
+        {
+            Debug.LogWarning($"{name}: 'weaponHitboxRoot' is not assigned on enemyAI.");
+            return;
+        }
+
+        var hitboxes = weaponHitboxRoot.GetComponentsInChildren<EnemyWeaponHitbox>(true);
+        if (hitboxes == null || hitboxes.Length == 0)
+        {
+            
+        }
+
+        foreach (var hb in hitboxes)
+        {
+            if (hb == null) continue;
+            hb.owner = this;
+            hb.damage = damage; // keep your Inspector value in sync
+        }
+    }
+
+
 
     void Update()
     {
@@ -90,7 +125,7 @@ public class enemyAI : MonoBehaviour, IDamage
         {
             if (hit.collider.CompareTag("Player"))
             {
-                if (agent.remainingDistance <= agent.stoppingDistance)
+                if (agent && agent.remainingDistance <= agent.stoppingDistance)
                     faceTarget();
                 return true;
             }
@@ -102,7 +137,7 @@ public class enemyAI : MonoBehaviour, IDamage
     {
         if (!walkPointSet) SearchWalkPoint();
 
-        if (walkPointSet)
+        if (walkPointSet && agent)
             agent.SetDestination(walkPoint);
 
         Vector3 distanceToWalkPoint = transform.position - walkPoint;
@@ -113,7 +148,11 @@ public class enemyAI : MonoBehaviour, IDamage
 
     void AttackPlayer()
     {
-        // Stop to attack
+        if (agent)
+        {
+            agent.SetDestination(transform.position);
+        }
+
         agent.SetDestination(transform.position);
 
         if (!alreadyAttacked)
@@ -127,33 +166,11 @@ public class enemyAI : MonoBehaviour, IDamage
 
     IEnumerator MeleeSwingWindow()
     {
-        
+
         yield return new WaitForSeconds(0.05f);
-
-        ToggleWeapon(true);
-
-        
-        DoMeleeHit();
-
-        
+        ToggleWeapon(true);                     
         yield return new WaitForSeconds(attackHitWindow);
-
         ToggleWeapon(false);
-    }
-
-    void DoMeleeHit()
-    {
-        if (!weaponHitboxRoot) return;
-
-        int count = Physics.OverlapSphereNonAlloc(weaponHitboxRoot.position, 0.9f, _hits, targetMask);
-        for (int i = 0; i < count; i++)
-        {
-            var idmg = _hits[i].GetComponentInParent<IDamage>();
-            if (idmg != null)
-            {
-                idmg.takeDamage(damage);
-            }
-        }
     }
 
     void ResetAttack()
