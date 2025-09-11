@@ -309,8 +309,8 @@ MonoBehaviour:
   model: {fileID: 1175902023069571044}
   headPos: {fileID: 6871062910905521632}
   castPoint: {fileID: 8018807296016376696}
-  projectilePrefab: {fileID: 4375970878291645958, guid: 94acfdc67c279264a91af82f3fd28661, type: 3}
   animator: {fileID: 4170590715840880432}
+  primarySpell: {fileID: 11400000, guid: b9ebd03261cbdf8478dd618eae49147b, type: 2}
   HP: 50
   faceTargetSpeed: 10
   FOV: 180

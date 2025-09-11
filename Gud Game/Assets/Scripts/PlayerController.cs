@@ -159,12 +159,12 @@ public class PlayerController : MonoBehaviour, iSpellCaster
         }
     }
 
-    IEnumerator flashDamage()
+   /* IEnumerator flashDamage()
     {
         gameManager.instance.playerDamageFlash.SetActive(true);
         yield return new WaitForSeconds(0.1f);
         gameManager.instance.playerDamageFlash.SetActive(false);
-    }
+    }*/
 
 
     //Expose current health for UI.

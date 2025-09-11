@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d24365df3f41fb84ea86166e13298576, type: 3}
-  m_Name: firebolt
+  m_Name: Enemy Fireball
   m_EditorClassIdentifier: Assembly-CSharp::SpellData
   id: firebolt
-  manaCost: 20
-  cooldown: 0.1
-  damage: 50
-  projectilePrefab: {fileID: 8069041786549752062, guid: 379ab92b0f5fe0b498f3bfed47cf5a06, type: 3}
+  manaCost: 10
+  cooldown: 0.5
+  damage: 25
+  projectilePrefab: {fileID: 4375970878291645958, guid: 94acfdc67c279264a91af82f3fd28661, type: 3}

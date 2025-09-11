@@ -38,7 +38,7 @@ public class DamageableHealth : MonoBehaviour, iDamageable
 
         //Flash Screen to notify player of damage || Flash Enemy to notify player of damage.
         if (gameObject.tag == "Player") { StartCoroutine(damageFlash()); }
-        ///else { EnemyDamageFlash(); }
+        else if (gameObject.GetComponent<iEnemy>() != null) { gameObject.GetComponent<iEnemy>().FlashDamage(); }
 
         // If health hit 0, handle "death".
         if (_health <= 0f)

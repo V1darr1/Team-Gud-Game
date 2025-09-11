@@ -42,11 +42,11 @@ public class damage : MonoBehaviour
         if (other.isTrigger)
             return;
 
-        IDamage dmg = other.GetComponent<IDamage>();
+        iDamageable target = other.GetComponent<iDamageable>();
 
-        if (dmg != null && (type == damageType.moving || type == damageType.stationary || type == damageType.homing))
+        if (target != null && (type == damageType.moving || type == damageType.stationary || type == damageType.homing))
         {
-            dmg.takeDamage(damageAmount);
+            target.ApplyDamage(damageAmount);
         }
 
         if (type == damageType.homing || type == damageType.moving)

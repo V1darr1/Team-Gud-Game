@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.AI;
 
 
-public class enemyAI : MonoBehaviour, IDamage
+public class enemyAI : MonoBehaviour, iEnemy
 {
     [SerializeReference] NavMeshAgent agent;
     [SerializeField] Renderer model;
@@ -203,28 +203,6 @@ public class enemyAI : MonoBehaviour, IDamage
         if (other.CompareTag("Player"))
             playerInTrigger = false;
     }
-
-    public void takeDamage(int amount)
-    {
-        if (HP > 0)
-        {
-            HP -= amount;
-            StartCoroutine(flashRed());
-        }
-        if (HP <= 0)
-        {
-            gameManager.instance.updateGameGoal(-1);
-            Destroy(gameObject);
-        }
-    }
-
-    IEnumerator flashRed()
-    {
-        model.material.color = Color.red;
-        yield return new WaitForSeconds(0.1f);
-        model.material.color = colorOrig;
-    }
-
     
     void ToggleWeapon(bool active)
     {
@@ -238,4 +216,15 @@ public class enemyAI : MonoBehaviour, IDamage
         }
     }
 
+    IEnumerator flashRed()
+    {
+        model.material.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        model.material.color = colorOrig;
+    }
+
+    public void FlashDamage()
+    {
+        StartCoroutine(flashRed());
+    }
 }

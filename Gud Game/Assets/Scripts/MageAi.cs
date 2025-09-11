@@ -8,8 +8,12 @@ public class MageAi : MonoBehaviour
     [SerializeField] private Renderer model;
     [SerializeField] private Transform headPos;
     [SerializeField] private Transform castPoint;
-    [SerializeField] private GameObject projectilePrefab;
+   
     [SerializeField] private Animator animator;
+
+    [Header("Equipped Spell")]
+    [Tooltip("Drop SpellData asset here (e.g., FireboltSpell).")]
+    [SerializeField] private SpellData primarySpell;  // Implements iSpell
 
     [SerializeField] private int HP = 50;
     [SerializeField] private int faceTargetSpeed = 10;
@@ -19,6 +23,7 @@ public class MageAi : MonoBehaviour
     [SerializeField] private float attackRange = 12f;
     [SerializeField] private float attackCooldown = 1.5f;
     [SerializeField] private float projectileSpeed = 10f;
+    private float _cooldownTimer;
 
     private bool alreadyAttacked;
     private bool isDead = false;
@@ -53,6 +58,13 @@ public class MageAi : MonoBehaviour
 
         if(animator && agent !=null)
             animator.SetFloat("Speed",agent.velocity.magnitude);
+
+
+        //Cooldown Timer ticks towards 0
+        if (_cooldownTimer > 0f)
+            _cooldownTimer -= Time.deltaTime;
+
+
     }
     bool canSeePlayer()
     {
@@ -89,34 +101,22 @@ public class MageAi : MonoBehaviour
     {
         agent.SetDestination(transform.position);
 
-        if(!alreadyAttacked)
-        {
-            alreadyAttacked = true;
-            CastSpell();
-            Invoke(nameof(ResetAttack),attackCooldown);
-        }
+        CastSpell();
+
     }
     void CastSpell ()
     {
         if (animator) animator.SetTrigger("Cast");
 
         Vector3 direction = (gameManager.instance.player.transform.position - castPoint.position).normalized;
-        GameObject spell = Instantiate(projectilePrefab, castPoint.position, Quaternion.LookRotation(direction));
+        Vector3 origin = castPoint.position;
+        if (primarySpell == null) return;          // No spell equipped
+        if (!CanCast(primarySpell)) return;        // Not ready (mana/cooldown)
 
-        Collider mageCol = GetComponent<Collider>();
-        Collider spellCol = spell.GetComponent<Collider>();
 
-        if (mageCol && spellCol)
-            Physics.IgnoreCollision(mageCol, spellCol);
+        // Actually begin the cast
+        BeginCast(primarySpell, origin, direction);
 
-        Rigidbody rb = spell.GetComponent<Rigidbody>();
-        if(rb)
-        {
-            rb.linearVelocity = direction * projectileSpeed;
-        }
-
-        if (spellCol)
-            StartCoroutine(EnableColliderAfterDelay(spellCol, 0.5f));
     }
     void ResetAttack() => alreadyAttacked = false;
 
@@ -157,5 +157,43 @@ public class MageAi : MonoBehaviour
         spellCOl.enabled = false;
         yield return new WaitForSeconds(delay);
         spellCOl.enabled = true;
+    }
+    public bool CanCast(iSpell spell)
+    {
+        if (spell == null) return false;
+        if (_cooldownTimer > 0f) return false;    // still cooling down
+        return true;
+    }
+    public void BeginCast(iSpell spell, Vector3 origin, Vector3 direction)
+    {
+        // Start cooldown
+        _cooldownTimer = spell.Cooldown;
+
+        // If the spell has no projectile prefab, we can't shoot a projectile.
+        // (Later you can add hitscan logic here.)
+        if (spell.ProjectilePrefab == null)
+        {
+            Debug.LogWarning($"Spell '{spell.Id}' has no projectile prefab assigned.");
+            return;
+        }
+
+        // Compute a spawn position slightly in front of the camera
+        Vector3 spawnPos = origin + direction;
+
+        // Instantiate (spawn) the projectile
+        GameObject projGO = Instantiate(spell.ProjectilePrefab, spawnPos, Quaternion.LookRotation(direction));
+
+        // Give it damage + forward direction
+        var projectile = projGO.GetComponent<SimpleProjectile>();
+        if (projectile != null)
+        {
+            projectile.Init(damage: spell.Damage, direction: direction);
+        }
+        else
+        {
+            // If you rename the projectile script later, update this type here.
+            Debug.LogWarning("Spawned projectile is missing FireboltProjectile component.");
+        }
+
     }
 }
