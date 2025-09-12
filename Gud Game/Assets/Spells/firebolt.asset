@@ -15,5 +15,5 @@ MonoBehaviour:
   id: firebolt
   manaCost: 20
   cooldown: 0.1
-  damage: 10
+  damage: 50
   projectilePrefab: {fileID: 8069041786549752062, guid: 379ab92b0f5fe0b498f3bfed47cf5a06, type: 3}
