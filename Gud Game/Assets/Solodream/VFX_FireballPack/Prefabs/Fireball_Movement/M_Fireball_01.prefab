@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2527298531764070769}
-  - component: {fileID: 8685300931038758365}
+  - component: {fileID: 9032738142260292813}
   - component: {fileID: 2527298531764070782}
   - component: {fileID: 2527298531764070783}
   - component: {fileID: -7969847563846607418}
@@ -36,7 +36,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8685300931038758365
+--- !u!114 &9032738142260292813
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,11 +45,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2527298531764070780}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 228e11d5480b3a34998afd4cc804747c, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a09c1785462a904889cccfc304cac83, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Fireball
-  lifeTime: 5
-  damage: 10
+  m_EditorClassIdentifier: Assembly-CSharp::FireballMovement.FireballHorizontalMovement
+  _startingPos: {x: 0, y: 0, z: 0}
+  _moveSpeed: 0.5
+  delay: 4
+  timer: 0
 --- !u!2083052967 &2527298531764070782
 VisualEffect:
   m_ObjectHideFlags: 0

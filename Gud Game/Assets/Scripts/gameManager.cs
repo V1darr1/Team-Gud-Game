@@ -18,12 +18,14 @@ public class gameManager : MonoBehaviour
     [SerializeField] Camera mainCam;
 
     [HideInInspector] public GameObject menuActive;
-
+   
     public Image playerHPBar;
     public Image playerMPBar;
     public GameObject playerDamageFlash;
 
     public GameObject player;
+    public PlayerController playerController;
+    public DamageableHealth playerDamageableHealth;
     public Transform playerSpawnPoint; // A reference to the player's start position
 
     public bool isPaused;
@@ -56,6 +58,9 @@ public class gameManager : MonoBehaviour
     private void Start()
     {
         timeScaleOrig = Time.timeScale;
+        player = GameObject.FindWithTag("Player");
+        playerController = player.GetComponent<PlayerController>();
+        playerDamageableHealth = player.GetComponent<DamageableHealth>();
 
         if (menuMain != null) menuMain.SetActive(true);
         if (menuPause != null) menuPause.SetActive(false);
@@ -91,6 +96,7 @@ public class gameManager : MonoBehaviour
             if (menuActive == null) PauseGame(menuPause);
             else if (menuActive == menuPause) UnpauseGame();
         }
+        HealthAndMana();
     }
 
     public void PauseGame(GameObject menu)
@@ -157,5 +163,12 @@ public class gameManager : MonoBehaviour
     public void OpenSettingsMenu()
     {
         PauseGame(settingsMenu);
+    }
+    void HealthAndMana()
+    {
+       
+        
+           playerHPBar.fillAmount = (playerDamageableHealth.CurrentHealth / playerDamageableHealth.MaxHealth);
+          playerMPBar.fillAmount = (playerController.CurrentMana / playerController.MaxMana);
     }
 }

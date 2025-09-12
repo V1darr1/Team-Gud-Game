@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class DamageableHealth : MonoBehaviour, iDamageable
@@ -35,6 +36,10 @@ public class DamageableHealth : MonoBehaviour, iDamageable
         // Print simple feedback to the Console so you can see it working.
         Debug.Log($"{name} took {amount} damage. HP: {_health}/{maxHealth}");
 
+        //Flash Screen to notify player of damage || Flash Enemy to notify player of damage.
+        if (gameObject.tag == "Player") { StartCoroutine(damageFlash()); }
+        ///else { EnemyDamageFlash(); }
+
         // If health hit 0, handle "death".
         if (_health <= 0f)
         {
@@ -55,6 +60,7 @@ public class DamageableHealth : MonoBehaviour, iDamageable
             Destroy(gameObject);
             //Add any additional logic needed for game here.
         }
+        if (gameObject.tag == "Player") { gameManager.instance.OpenLoseMenu(); }
     }
 
     public void ApplyHealing(float amount)
@@ -63,6 +69,19 @@ public class DamageableHealth : MonoBehaviour, iDamageable
         _health = Mathf.Min(maxHealth, _health + Mathf.Max(0f, amount));
         Debug.Log($"{name} healed {amount}. HP: {_health}/{maxHealth}");
     }
+
+    IEnumerator damageFlash()
+    {
+        gameManager.instance.playerDamageFlash.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        gameManager.instance.playerDamageFlash.SetActive(false);
+    }
+    /*void EnemyDamageFlash()
+    {
+        Color orig = gameObject.GetComponent<Renderer>().material.color;
+        gameObject.GetComponent<Renderer>().material.color = Color.red;
+        gameObject.GetComponent<Renderer>().material.color = orig;
+    }*/
 
     //Expose current health for UI.
     public float CurrentHealth => _health;

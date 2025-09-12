@@ -152,8 +152,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::cameraControl
   sens: 300
   lockVertMin: -90
-  LockVertMax: 90
+  lockVertMax: 90
   invertY: 0
+  mainCamera: {fileID: 0}
 --- !u!1 &7176983156523098228
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,6 +213,7 @@ MonoBehaviour:
   jumpSpeed: 12
   jumpMax: 2
   gravity: 32
+  HP: 0
   manaMax: 100
   manaRegenPerSec: 10
   primarySpell: {fileID: 11400000, guid: be97d3da2398aee40bde8287166191f8, type: 2}
