@@ -1,0 +1,199 @@
+using System.Collections;
+using UnityEngine;
+using UnityEngine.AI;
+
+public class MageAi : MonoBehaviour
+{
+    [SerializeField] private NavMeshAgent agent;
+    [SerializeField] private Renderer model;
+    [SerializeField] private Transform headPos;
+    [SerializeField] private Transform castPoint;
+   
+    [SerializeField] private Animator animator;
+
+    [Header("Equipped Spell")]
+    [Tooltip("Drop SpellData asset here (e.g., FireboltSpell).")]
+    [SerializeField] private SpellData primarySpell;  // Implements iSpell
+
+    [SerializeField] private int HP = 50;
+    [SerializeField] private int faceTargetSpeed = 10;
+    [SerializeField] private int FOV = 180;
+
+    [SerializeField] private float sightRange = 12f;
+    [SerializeField] private float attackRange = 12f;
+    [SerializeField] private float attackCooldown = 1.5f;
+    [SerializeField] private float projectileSpeed = 10f;
+    private float _cooldownTimer;
+
+    private bool alreadyAttacked;
+    private bool isDead = false;
+    private Color colorOrig;
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        gameManager.instance.updateGameGoal(1);
+        colorOrig = model.material.color;
+
+        if (agent != null) agent.updateRotation = false;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(isDead) return;
+
+        var player = gameManager.instance.player;
+        if (!player) return;
+
+        float dist= Vector3.Distance(transform.position, player.transform.position);
+        bool inSight = dist <= sightRange && canSeePlayer();
+        bool inRange = dist <= attackRange;
+
+        if (!inSight && !inRange)
+            Patrolling();
+        if (inSight && !inRange)
+            ChasePlayer();
+        if (inSight && inRange)
+            AttackPlayer();
+
+        if(animator && agent !=null)
+            animator.SetFloat("Speed",agent.velocity.magnitude);
+
+
+        //Cooldown Timer ticks towards 0
+        if (_cooldownTimer > 0f)
+            _cooldownTimer -= Time.deltaTime;
+
+
+    }
+    bool canSeePlayer()
+    {
+        var player = gameManager.instance.player;
+        if (!player) return false;
+        
+        Vector3 playerDir = player.transform.position-headPos.position;
+        float angleToPlayer = Vector3.Angle(playerDir, transform.forward);
+
+        if (angleToPlayer > FOV) return false;
+
+        if (Physics.Raycast(headPos.position, playerDir.normalized, out RaycastHit hit, sightRange))
+        {
+            if(hit.collider.CompareTag("Player"))
+            {
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                    faceTarget();
+                return true;
+            }
+        }
+        return false;  
+        
+    }
+    void Patrolling()
+    {
+        agent.isStopped = false;
+    }
+    void ChasePlayer()
+    {
+        var player = gameManager.instance.player;
+        if (player) agent.SetDestination(player.transform.position);
+    }
+    void AttackPlayer ()
+    {
+        agent.SetDestination(transform.position);
+
+        CastSpell();
+
+    }
+    void CastSpell ()
+    {
+        if (animator) animator.SetTrigger("Cast");
+
+        Vector3 direction = (gameManager.instance.player.transform.position - castPoint.position).normalized;
+        Vector3 origin = castPoint.position;
+        if (primarySpell == null) return;          // No spell equipped
+        if (!CanCast(primarySpell)) return;        // Not ready (mana/cooldown)
+
+
+        // Actually begin the cast
+        BeginCast(primarySpell, origin, direction);
+
+    }
+    void ResetAttack() => alreadyAttacked = false;
+
+    void faceTarget()
+    {
+        var player = gameManager.instance.player;
+        if(!player) return;
+
+        Vector3 flatDir = player.transform.position - transform.position;
+        flatDir.y = 0f;
+        if (flatDir.sqrMagnitude < 0.0001f) return;
+        Quaternion rot = Quaternion.LookRotation(flatDir);
+        transform.rotation = Quaternion.Lerp(transform.rotation,rot,Time.deltaTime* faceTargetSpeed);
+    }
+    public void takeDamage(int amount)
+    {
+        if (isDead) return;
+
+        HP-=amount;
+        StartCoroutine(flashRed());
+
+        if(HP <=0)
+        {
+            isDead = true;
+            gameManager.instance.updateGameGoal(-1);
+            if (animator) animator.SetTrigger("Die");
+            Destroy(gameObject, 5f);
+        }
+    }
+    IEnumerator flashRed()
+    {
+        model.material.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        model.material.color = colorOrig;
+    }
+    IEnumerator EnableColliderAfterDelay(Collider spellCOl, float delay)
+    {
+        spellCOl.enabled = false;
+        yield return new WaitForSeconds(delay);
+        spellCOl.enabled = true;
+    }
+    public bool CanCast(iSpell spell)
+    {
+        if (spell == null) return false;
+        if (_cooldownTimer > 0f) return false;    // still cooling down
+        return true;
+    }
+    public void BeginCast(iSpell spell, Vector3 origin, Vector3 direction)
+    {
+        // Start cooldown
+        _cooldownTimer = spell.Cooldown;
+
+        // If the spell has no projectile prefab, we can't shoot a projectile.
+        // (Later you can add hitscan logic here.)
+        if (spell.ProjectilePrefab == null)
+        {
+            Debug.LogWarning($"Spell '{spell.Id}' has no projectile prefab assigned.");
+            return;
+        }
+
+        // Compute a spawn position slightly in front of the camera
+        Vector3 spawnPos = origin + direction;
+
+        // Instantiate (spawn) the projectile
+        GameObject projGO = Instantiate(spell.ProjectilePrefab, spawnPos, Quaternion.LookRotation(direction));
+
+        // Give it damage + forward direction
+        var projectile = projGO.GetComponent<SimpleProjectile>();
+        if (projectile != null)
+        {
+            projectile.Init(damage: spell.Damage, direction: direction);
+        }
+        else
+        {
+            // If you rename the projectile script later, update this type here.
+            Debug.LogWarning("Spawned projectile is missing FireboltProjectile component.");
+        }
+
+    }
+}
