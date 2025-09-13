@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour, iSpellCaster
     [Tooltip("Drop SpellData asset here (e.g., FireboltSpell).")]
     [SerializeField] private SpellData primarySpell;  // Implements iSpell
 
+    public bool IsManaFull => _mana >= manaMax;
 
     Vector3 moveDir, playerVel;
 
@@ -116,6 +117,18 @@ public class PlayerController : MonoBehaviour, iSpellCaster
         BeginCast(primarySpell, origin, direction);
     }
 
+    // This code for working mana pickups
+    public void AddMana(float amount)
+    {
+        if (amount <= 0f) return;
+        float before = _mana;
+        _mana = Mathf.Min(manaMax, _mana + amount);
+        if (_mana > before)
+        {
+            Debug.Log($"Mana +{amount}. MP: {_mana}/{manaMax}");
+        }
+    }
+    
     // Quick checks: enough mana and cooldown ready.
     public bool CanCast(iSpell spell)
     {
