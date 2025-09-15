@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class DamageableHealth : MonoBehaviour, iDamageable
 {
+    public event System.Action<DamageableHealth> OnDied;
+    bool _deathInvoked;
+
     [Header("Health Settings")]
     [Tooltip("Health this object starts with.")]
     [SerializeField] private float maxHealth = 100f;
@@ -52,6 +55,12 @@ public class DamageableHealth : MonoBehaviour, iDamageable
     {
         // You can hook death animation, sound, or events here.
         Debug.Log($"{name} died.");
+
+        if (!_deathInvoked)
+        {
+            _deathInvoked = true;
+            OnDied?.Invoke(this);
+        }
 
         if (destroyOnDeath)
         { 
