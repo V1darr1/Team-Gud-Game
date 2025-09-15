@@ -127,6 +127,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4065468805229125651, guid: 3a3d0fe344c7e164abd53c5a65edb9a7, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4065468805229125651, guid: 3a3d0fe344c7e164abd53c5a65edb9a7, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4065468805229125651, guid: 3a3d0fe344c7e164abd53c5a65edb9a7, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4065468805229125651, guid: 3a3d0fe344c7e164abd53c5a65edb9a7, type: 3}
+      propertyPath: m_Color.r
+      value: 0.1981132
+      objectReference: {fileID: 0}
     - target: {fileID: 7153465604296355586, guid: 3a3d0fe344c7e164abd53c5a65edb9a7, type: 3}
       propertyPath: m_Name
       value: 'UI '
@@ -210,6 +226,22 @@ PrefabInstance:
     - target: {fileID: 7609900111330745329, guid: 3a3d0fe344c7e164abd53c5a65edb9a7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8979160014817875698, guid: 3a3d0fe344c7e164abd53c5a65edb9a7, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8979160014817875698, guid: 3a3d0fe344c7e164abd53c5a65edb9a7, type: 3}
+      propertyPath: m_Color.b
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8979160014817875698, guid: 3a3d0fe344c7e164abd53c5a65edb9a7, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2169459
+      objectReference: {fileID: 0}
+    - target: {fileID: 8979160014817875698, guid: 3a3d0fe344c7e164abd53c5a65edb9a7, type: 3}
+      propertyPath: m_Color.r
+      value: 0.058962256
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
