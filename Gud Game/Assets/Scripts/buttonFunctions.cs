@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class buttonFunctions : MonoBehaviour
@@ -32,6 +33,21 @@ public class buttonFunctions : MonoBehaviour
     public void InvertYOff()
     {
         if (cameraController != null) cameraController.SetInvertY(false);
+    }
+
+    public void newGame()
+    {
+        StartCoroutine(NewGameRoutine());
+    }
+
+    private IEnumerator NewGameRoutine()
+    {
+        gameManager.instance.OnNewGame();
+
+        // wait a second or two so rooms reset & player gets placed
+        yield return new WaitForSeconds(1.5f);
+
+        gameManager.instance.UnpauseGame();
     }
 
     public void quit()

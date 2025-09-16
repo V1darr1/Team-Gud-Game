@@ -45,9 +45,6 @@ public class DoorTrigger : MonoBehaviour
         _used = true;
         if (_col) _col.enabled = false;
 
-        // prevent going back through this door
-        door.Lock();
-
         Debug.Log("[DoorTrigger] Requesting transition...");
         flow.RequestTransitionFromDoor(this, other.transform);
     }

@@ -6,6 +6,7 @@ public class Door : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private bool startLocked = true;
 
+    bool _permanentLock;
     public bool IsLocked { get; private set; }
 
 
@@ -17,8 +18,23 @@ public class Door : MonoBehaviour
         ApplyVisuals();
     }
 
-    public void Lock() { IsLocked = true; ApplyVisuals(); }
-    public void Unlock() { IsLocked = false; ApplyVisuals(); }
+    public void Lock() 
+    { 
+        IsLocked = true; 
+        ApplyVisuals(); 
+    }
+    public void Unlock() 
+    {
+        if (_permanentLock) return;
+        IsLocked = false; 
+        ApplyVisuals(); 
+    }
+
+    public void SetPermanentLock(bool value)
+    {
+        _permanentLock = value;
+        if (value) Lock();
+    }
 
     void ApplyVisuals()
     {
