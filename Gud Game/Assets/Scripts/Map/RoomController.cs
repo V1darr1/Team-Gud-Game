@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Linq;
 
 public class RoomController : MonoBehaviour
@@ -11,23 +11,43 @@ public class RoomController : MonoBehaviour
 
     void Awake()
     {
-        // auto-find doors if not assigned
+        // Auto-find doors if not assigned
         if (doors == null || doors.Length == 0)
             doors = GetComponentsInChildren<Door>(true);
 
-        // cast MonoBehaviours -> IRoomObjective
-        _objectives = objectiveBehaviours
-            .OfType<IRoomObjective>()
-            .ToArray();
+        // If you didn't assign objectives in the inspector, auto-find any under this room
+        if (objectiveBehaviours == null || objectiveBehaviours.Length == 0)
+        {
+            objectiveBehaviours = GetComponentsInChildren<MonoBehaviour>(true)
+                                  .Where(mb => mb is IRoomObjective)
+                                  .ToArray();
+        }
 
-        // lock all doors at start
-        foreach (var d in doors) d.Lock();
+        // Cast MonoBehaviours -> IRoomObjective (and de-dupe)
+        _objectives = objectiveBehaviours
+                      .OfType<IRoomObjective>()
+                      .Distinct()
+                      .ToArray();
     }
 
     void OnEnable()
     {
         foreach (var obj in _objectives)
             obj.OnCompleted += OnObjectiveCompleted;
+    }
+
+    void Start()
+    {
+        // IMPORTANT: lock in Start (after OnEnable) so we don't miss a fast completion
+        if (_objectives == null || _objectives.Length == 0)
+        {
+            // No objectives → keep doors usable (do not trap 1-door rooms)
+            foreach (var d in doors) d.Unlock();
+        }
+        else
+        {
+            foreach (var d in doors) d.Lock();
+        }
     }
 
     void OnDisable()
@@ -41,6 +61,8 @@ public class RoomController : MonoBehaviour
         _completedCount++;
         if (_completedCount >= _objectives.Length)
         {
+            // Unlock remaining doors. If your Door has a permanent lock guard,
+            // Unlock() will naturally skip sealed doors.
             foreach (var d in doors) d.Unlock();
         }
     }

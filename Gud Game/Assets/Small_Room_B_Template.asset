@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd60fee27d3824f45a290c25fac1b8fd, type: 3}
+  m_Name: Small_Room_B_Template
+  m_EditorClassIdentifier: Assembly-CSharp::RoomTemplate
+  roomPrefab: {fileID: 1681269289796068635, guid: d3236587621d05546b54d8123caa0392, type: 3}
+  sockets:
+  - A
+  - B
+  weight: 1
