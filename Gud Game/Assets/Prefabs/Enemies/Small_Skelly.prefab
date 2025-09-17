@@ -195,6 +195,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5138128267656528082}
+  - component: {fileID: -1140388410718247036}
   - component: {fileID: 8673746140320868096}
   - component: {fileID: 623090955753136442}
   - component: {fileID: 5368378755852368894}
@@ -228,6 +229,23 @@ Transform:
   - {fileID: 6763768506712785352}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 170.001, z: 0}
+--- !u!114 &-1140388410718247036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664744587384592746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e0d2c84431b0942932ea56738b2639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DropOrbsOnDeath
+  dropChance: 0.25
+  healthPickup: {fileID: 9181176699362758715, guid: 547ef026d8576844f9287af744958fcd, type: 3}
+  manaPickup: {fileID: 3093340706528911704, guid: a468edaae5d02394b879ab90d280af6a, type: 3}
+  spawnHeight: 0.4
+  scatter: 0.3
 --- !u!95 &8673746140320868096
 Animator:
   serializedVersion: 7
@@ -283,7 +301,7 @@ MonoBehaviour:
   headPos: {fileID: 7682806386751278538}
   animator: {fileID: 8673746140320868096}
   health: {fileID: 623090955753136442}
-  faceTargetSpeed: 15
+  faceTargetSpeed: 20
   FOV: 180
   sightRange: 20
   attackRange: 2.2
