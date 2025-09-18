@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2015555018027817960}
+  - component: {fileID: -5861462139398308213}
   - component: {fileID: 1367172956204670222}
   - component: {fileID: 4592473023326266213}
-  - component: {fileID: 4943422738906104534}
   - component: {fileID: 2354245450480479541}
   - component: {fileID: 8052750454438100297}
   - component: {fileID: -346101511868554955}
@@ -37,6 +37,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-5861462139398308213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8069041786549752062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aae3a5453a0d051409cdce1d916dd6d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleProjectile
+  speed: 30
+  lifetime: 5
+  drawGizmoForward: 1
 --- !u!33 &1367172956204670222
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -93,24 +108,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4943422738906104534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8069041786549752062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f4bf7a5e32ddbd49ae600ca9a4e6b42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::damage
-  type: 0
-  rb: {fileID: -346101511868554955}
-  damageAmount: 20
-  damageRate: 0
-  speed: 30
-  destroyTime: 2
 --- !u!135 &2354245450480479541
 SphereCollider:
   m_ObjectHideFlags: 0
