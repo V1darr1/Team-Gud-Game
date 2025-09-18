@@ -76,7 +76,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
+  m_TargetTexture: {fileID: 8400000, guid: 57f48f39f94d99a41b9bb3d48a257677, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e266a07cd262bd4fbce35de2d361816, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::cameraControl
-  sens: 300
+  sens: 600
   lockVertMin: -90
   lockVertMax: 90
   invertY: 0
@@ -185,7 +185,7 @@ Transform:
   m_GameObject: {fileID: 7176983156523098228}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.600826, y: 1.8, z: 39.56933}
+  m_LocalPosition: {x: -11, y: 1.5, z: -0.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -213,9 +213,8 @@ MonoBehaviour:
   jumpSpeed: 12
   jumpMax: 2
   gravity: 32
-  HP: 0
-  manaMax: 100
-  manaRegenPerSec: 10
+  manaMax: 150
+  manaRegenPerSec: 15
   primarySpell: {fileID: 11400000, guid: be97d3da2398aee40bde8287166191f8, type: 2}
 --- !u!114 &1909963999102854683
 MonoBehaviour:
