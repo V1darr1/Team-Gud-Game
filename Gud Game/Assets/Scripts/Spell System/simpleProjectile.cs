@@ -23,6 +23,12 @@ public class SimpleProjectile : MonoBehaviour
     /// Called by the caster immediately after Instantiate().
     /// Sets the damage and the forward direction.
     /// </summary>
+
+    private void Start()
+    {
+        if (lifetime > 0f) Destroy(gameObject, lifetime);
+    }
+
     public void Init(float damage, Vector3 direction)
     {
         _damage = damage;
@@ -39,9 +45,6 @@ public class SimpleProjectile : MonoBehaviour
 
         // Move forward in the direction we're facing.
         transform.position += transform.forward * speed * Time.deltaTime;
-
-        // Count down lifetime and destroy when time runs out (prevents infinite objects).
-        Destroy(gameObject, lifetime);
     }
 
     /// <summary>

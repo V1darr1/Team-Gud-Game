@@ -39,6 +39,12 @@ public class DamageableHealth : MonoBehaviour, iDamageable
         // Print simple feedback to the Console so you can see it working.
         Debug.Log($"{name} took {amount} damage. HP: {_health}/{maxHealth}");
 
+        var ai = GetComponent<UnifiedEnemyAI>();
+        if (ai)
+        {
+            ai.OnDamaged(gameManager.instance.player.transform.position);
+        }
+
         //Flash Screen to notify player of damage || Flash Enemy to notify player of damage.
         if (gameObject.tag == "Player") { StartCoroutine(damageFlash()); }
         else if (gameObject.GetComponent<iEnemy>() != null) { gameObject.GetComponent<iEnemy>().FlashDamage(); }
