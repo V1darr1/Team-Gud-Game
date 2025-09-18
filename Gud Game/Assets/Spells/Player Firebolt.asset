@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d24365df3f41fb84ea86166e13298576, type: 3}
   m_Name: Player Firebolt
   m_EditorClassIdentifier: Assembly-CSharp::SpellData
-  id: firebolt
+  id: p_firebolt
   manaCost: 20
   cooldown: 0.1
   damage: 50

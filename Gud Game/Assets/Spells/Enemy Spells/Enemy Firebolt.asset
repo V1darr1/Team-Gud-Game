@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d24365df3f41fb84ea86166e13298576, type: 3}
   m_Name: Enemy Firebolt
   m_EditorClassIdentifier: Assembly-CSharp::SpellData
-  id: firebolt
-  manaCost: 10
+  id: e_firebolt
+  manaCost: 0
   cooldown: 1.5
-  damage: 25
+  damage: 20
   projectilePrefab: {fileID: 8069041786549752062, guid: 57774967ba1669c4e8dd957015179090, type: 3}
