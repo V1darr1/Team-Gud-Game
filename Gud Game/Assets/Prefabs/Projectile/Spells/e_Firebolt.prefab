@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleProjectile
   speed: 20
-  lifetime: 5
+  lifetime: 3
   drawGizmoForward: 1
 --- !u!33 &1367172956204670222
 MeshFilter:

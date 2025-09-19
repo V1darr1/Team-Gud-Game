@@ -344,19 +344,23 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
     {
         _cooldownTimer = spell.Cooldown;
 
+        // If the spell has no projectile prefab, we can't shoot a projectile.
+        // (For hitscan later, we'll add a different path.)
         if (spell.ProjectilePrefab == null)
         {
-            Debug.LogWarning($"Spell '{spell.Id}' has no projectile prefab.");
+            Debug.LogWarning($"Spell '{spell.Id}' has no projectile prefab assigned.");
             return;
         }
 
+        // Actually spawn the projectile GameObject.
         Vector3 spawnPos = origin + direction; // slight offset
         GameObject proj = Instantiate(spell.ProjectilePrefab, spawnPos, Quaternion.LookRotation(direction));
 
-        var projectile = proj.GetComponent<SimpleProjectile>();
+        // IMPORTANT: Grab ANY component that implements iProjectile and initialize it.
+        var projectile = proj.GetComponent<iProjectile>();
         if (projectile != null)
         {
-            projectile.Init(damage: spell.Damage, direction: direction);
+            projectile.Init(damage: spell.Damage, direction: direction, gameObject);
         }
     }
 
