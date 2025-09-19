@@ -187,7 +187,7 @@ public class MageAi : MonoBehaviour
         var projectile = projGO.GetComponent<SimpleProjectile>();
         if (projectile != null)
         {
-            projectile.Init(damage: spell.Damage, direction: direction);
+            projectile.Init(damage: spell.Damage, direction: direction, gameObject);
         }
         else
         {

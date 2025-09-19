@@ -123,4 +123,45 @@ public class simpleHoming : MonoBehaviour , iProjectile
 
         return true;
     }
+
+    /// <summary>
+    /// Scans nearby colliders and picks the nearest valid target.
+    /// </summary>
+    private Transform FindNearestValidTarget()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, acquireRadius, targetLayers, QueryTriggerInteraction.Ignore);
+
+        Transform best = null;
+        float bestDist = Mathf.Infinity;
+
+        foreach (var col in hits)
+        {
+            // Skip our owner and anything inside the owner's hierarchy
+            if (_owner != null && col.transform.IsChildOf(_owner.transform)) continue;
+
+            Transform root = col.attachedRigidbody ? col.attachedRigidbody.transform : col.transform;
+
+            if (!IsTargetValid(root)) continue;
+
+            float d = Vector3.SqrMagnitude(root.position - transform.position); // sqrDist is faster
+            if (d < bestDist)
+            {
+                bestDist = d;
+                best = root;
+            }
+        }
+
+        return best;
+    }
+
+#if UNITY_EDITOR
+    /// <summary>
+    /// Draws helper gizmos in the Scene view so you can visualize the seek radius.
+    /// </summary>
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(transform.position, acquireRadius);
+    }
+#endif
 }
