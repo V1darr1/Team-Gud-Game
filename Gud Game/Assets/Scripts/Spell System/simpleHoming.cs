@@ -36,15 +36,26 @@ public class simpleHoming : MonoBehaviour , iProjectile
     [Tooltip("How 'in front' a target must be to consider (0=any direction, 1=straight ahead). 0.4 is forgiving.")]
     [SerializeField, Range(0f, 1f)] private float forwardBiasDot = 0.4f;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    // --- Runtime state filled by Init(...) ---
+    private float _damage;
+    private bool _initialized;
+    private GameObject _owner;
 
-    // Update is called once per frame
-    void Update()
+    // Target tracking
+    private Transform _target;      // where to steer
+    private float _seekTimer;       // counts down to 0, then we scan again
+
+    public void Init(float damage, Vector3 direction, GameObject owner)
     {
-        
+        _damage = damage;
+        _owner = owner;
+
+        // Point our forward along the given direction.
+        transform.rotation = Quaternion.LookRotation(direction);
+
+        // Force an immediate first scan for targets.
+        _seekTimer = 0f;
+
+        _initialized = true;
     }
 }
