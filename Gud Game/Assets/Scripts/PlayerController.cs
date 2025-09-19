@@ -138,7 +138,8 @@ public class PlayerController : MonoBehaviour, iSpellCaster
         return true;
     }
 
-    // Spend mana, start cooldown, spawn projectile, initialize it.
+    // Called when we actually cast the spell.
+    // Spends mana, starts cooldown, spawns the projectile, and initializes it.
     public void BeginCast(iSpell spell, Vector3 origin, Vector3 direction)
     {
         // Spend resources and start cooldown.
@@ -146,38 +147,38 @@ public class PlayerController : MonoBehaviour, iSpellCaster
         _cooldownTimer = spell.Cooldown;
 
         // If the spell has no projectile prefab, we can't shoot a projectile.
-        // (Later you can add hitscan logic here.)
+        // (For hitscan later, we'll add a different path.)
         if (spell.ProjectilePrefab == null)
         {
             Debug.LogWarning($"Spell '{spell.Id}' has no projectile prefab assigned.");
             return;
         }
 
-        // Compute a spawn position slightly in front of the camera
+        // Spawn a bit in front of the camera so we don't collide with ourselves.
         Vector3 spawnPos = origin + direction;
 
-        // Instantiate (spawn) the projectile
+        // Actually spawn the projectile GameObject.
         GameObject projGO = Instantiate(spell.ProjectilePrefab, spawnPos, Quaternion.LookRotation(direction));
 
-        // Give it damage + forward direction
-        var projectile = projGO.GetComponent<SimpleProjectile>();
-        if (projectile != null)
+        // IMPORTANT: Grab ANY component that implements iProjectile and initialize it.
+        var proj = projGO.GetComponent<iProjectile>();
+        if (proj != null)
         {
-            projectile.Init(damage: spell.Damage, direction: direction);
+            // Pass our damage, direction, and our own GameObject as the owner.
+            proj.Init(spell.Damage, direction, gameObject);
         }
         else
         {
-            // If you rename the projectile script later, update this type here.
-            Debug.LogWarning("Spawned projectile is missing FireboltProjectile component.");
+            Debug.LogWarning("Spawned projectile does not implement iProjectile.");
         }
     }
 
-   /* IEnumerator flashDamage()
-    {
-        gameManager.instance.playerDamageFlash.SetActive(true);
-        yield return new WaitForSeconds(0.1f);
-        gameManager.instance.playerDamageFlash.SetActive(false);
-    }*/
+    /* IEnumerator flashDamage()
+     {
+         gameManager.instance.playerDamageFlash.SetActive(true);
+         yield return new WaitForSeconds(0.1f);
+         gameManager.instance.playerDamageFlash.SetActive(false);
+     }*/
 
 
     //Expose current health for UI.

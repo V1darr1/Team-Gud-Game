@@ -2,7 +2,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 //[RequireComponent(typeof(Collider))] // Ensures there is ALWAYS a Collider on this object.
-public class SimpleProjectile : MonoBehaviour
+public class SimpleProjectile : MonoBehaviour, iProjectile
 {
     [Header("Movement")]
     [Tooltip("How fast the projectile moves forward (units/second).")]
@@ -29,13 +29,10 @@ public class SimpleProjectile : MonoBehaviour
         if (lifetime > 0f) Destroy(gameObject, lifetime);
     }
 
-    public void Init(float damage, Vector3 direction)
+    public void Init(float damage, Vector3 direction, GameObject owner)
     {
         _damage = damage;
-
-        // Rotate the projectile so its "forward" points along the direction we want to travel.
         transform.rotation = Quaternion.LookRotation(direction);
-
         _initialized = true;
     }
 

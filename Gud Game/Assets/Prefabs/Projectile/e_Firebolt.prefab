@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aae3a5453a0d051409cdce1d916dd6d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleProjectile
-  speed: 30
+  speed: 20
   lifetime: 5
   drawGizmoForward: 1
 --- !u!33 &1367172956204670222
