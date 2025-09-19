@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd60fee27d3824f45a290c25fac1b8fd, type: 3}
-  m_Name: Small_Room_C_Template
+  m_Name: Medium_Room_A_Template
   m_EditorClassIdentifier: Assembly-CSharp::RoomTemplate
-  roomPrefab: {fileID: 1681269289796068635, guid: d3236587621d05546b54d8123caa0392, type: 3}
+  roomPrefab: {fileID: 2399495754469323968, guid: 68b9cc4686557b847910f6d1b813761b, type: 3}
   sockets:
   - A
   - B
+  - C
   weight: 1
