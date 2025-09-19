@@ -58,4 +58,65 @@ public class simpleHoming : MonoBehaviour , iProjectile
 
         _initialized = true;
     }
+
+    private void Update()
+    {
+        if (!_initialized) return;
+
+        // Lifetime countdown (prevents projectiles from living forever)
+        lifetime -= Time.deltaTime;
+        if (lifetime <= 0f)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        // Periodically try to find a target (if we don't have one or it became invalid)
+        _seekTimer -= Time.deltaTime;
+        if (_seekTimer <= 0f)
+        {
+            // Re-scan if we lost target or it died/out-of-range.
+            if (_target == null || !IsTargetValid(_target))
+            {
+                _target = FindNearestValidTarget();
+            }
+            _seekTimer = reacquireInterval;
+        }
+
+        // If we have a valid target, steer toward it.
+        if (_target != null)
+        {
+            Vector3 toTarget = (_target.position - transform.position);
+            if (toTarget.sqrMagnitude > 0.001f)
+            {
+                Quaternion desired = Quaternion.LookRotation(toTarget.normalized);
+                // Rotate gradually (smooth turn) toward the target.
+                transform.rotation = Quaternion.RotateTowards(
+                    transform.rotation, desired, turnDegreesPerSecond * Time.deltaTime);
+            }
+        }
+
+        // Move forward along our current facing direction.
+        transform.position += transform.forward * speed * Time.deltaTime;
+    }
+
+    private bool IsTargetValid(Transform candidate)
+    {
+        var damageable = candidate.GetComponentInParent<iDamageable>();
+        if (damageable == null || !damageable.IsAlive) return false;
+
+        // Still in range?
+        float dist = Vector3.Distance(transform.position, candidate.position);
+        if (dist > acquireRadius) return false;
+
+        // If we require "in front", check a dot-product bias.
+        if (requireInFront)
+        {
+            Vector3 to = (candidate.position - transform.position).normalized;
+            float dot = Vector3.Dot(transform.forward, to);
+            if (dot < forwardBiasDot) return false;
+        }
+
+        return true;
+    }
 }
