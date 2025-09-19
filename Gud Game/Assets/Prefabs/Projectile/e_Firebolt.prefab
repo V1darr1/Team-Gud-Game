@@ -109,7 +109,7 @@ MonoBehaviour:
   rb: {fileID: -346101511868554955}
   damageAmount: 20
   damageRate: 0
-  speed: 30
+  speed: 20
   destroyTime: 2
 --- !u!135 &2354245450480479541
 SphereCollider:

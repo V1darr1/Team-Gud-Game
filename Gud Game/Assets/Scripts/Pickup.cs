@@ -3,10 +3,12 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class Pickup : MonoBehaviour
 {
-    public enum PickupType { Health, Mana }
+    public enum PickupType { Health, Mana, DoubleDamage }
     public PickupType type = PickupType.Health;
     public float amount = 25f;
     public bool consumeIfFull = false;
+
+    public float doubleDamageDuration = 10f;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -35,6 +37,15 @@ public class Pickup : MonoBehaviour
                     float before = pc.CurrentMana;
                     pc.AddMana(amount);
                     consumed = (pc.CurrentMana > before || consumeIfFull);
+                }
+                break;
+
+            case PickupType.DoubleDamage:
+                var controller = playerRoot.GetComponentInChildren<PlayerController>();
+                if (controller != null)
+                {
+                    controller.StartCoroutine(controller.ApplyDoubleDamage(doubleDamageDuration));
+                    consumed = true;
                 }
                 break;
         }

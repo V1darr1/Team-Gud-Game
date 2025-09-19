@@ -61,25 +61,17 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
 
     void Start()
     {
-        gameManager.instance.updateGameGoal(1);
+        agent = GetComponent<NavMeshAgent>();
+        health = GetComponent<DamageableHealth>();
 
-        if (!agent) agent = GetComponent<NavMeshAgent>();
-            agent.stoppingDistance = Mathf.Max(0.05f, attackRange * 0.75f);
-        agent.autoRepath = true;
-        agent.autoBraking = true;
-        agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
-        agent.avoidancePriority = Random.Range(20, 80);
         if (!model) model = GetComponentInChildren<Renderer>();
-        if (!headPos) headPos = transform;
-        if (!health) health = GetComponent<DamageableHealth>();
-
-        if (agent) agent.updateRotation = false;
         if (model)
         {
-            colorOrig = model.material.color;
             _cachedMat = model.material;
+            colorOrig = _cachedMat.color;
         }
-        StartCoroutine(SnapAgentNextFrame());
+
+        if (agent) agent.updateRotation = false;
     }
 
     private IEnumerator SnapAgentNextFrame()

@@ -26,7 +26,8 @@ public class SimpleProjectile : MonoBehaviour
 
     private void Start()
     {
-        if (lifetime > 0f) Destroy(gameObject, lifetime);
+        if (lifetime > 0f) 
+            Destroy(gameObject, lifetime);
     }
 
     public void Init(float damage, Vector3 direction)
@@ -55,9 +56,10 @@ public class SimpleProjectile : MonoBehaviour
     {
         if (other.isTrigger) return; // Exit if Trigger
 
-        Debug.Log(other.name);
-        iDamageable dmg = other.GetComponent<iDamageable>();
-        if (dmg != null && dmg.IsAlive) { dmg.ApplyDamage(_damage);} //Debug name to Log / Apply Damage
+        var dmg = other.GetComponent<iDamageable>();
+        if (dmg != null && dmg.IsAlive)
+            dmg.ApplyDamage(_damage);
+
         Destroy(gameObject);
 
 
