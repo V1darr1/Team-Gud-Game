@@ -100,6 +100,10 @@ public class simpleHoming : MonoBehaviour , iProjectile
         transform.position += transform.forward * speed * Time.deltaTime;
     }
 
+    /// <summary>
+    /// Returns true if a candidate transform still looks like a good target.
+    /// Checks for iDamageable + alive, within radius, and (optionally) in front.
+    /// </summary>
     private bool IsTargetValid(Transform candidate)
     {
         var damageable = candidate.GetComponentInParent<iDamageable>();
