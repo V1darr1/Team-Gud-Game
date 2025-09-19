@@ -10,6 +10,7 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
     [SerializeField] private BehaviorType behavior = BehaviorType.Melee;
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private Renderer model;
+    private Material _cachedMat;
     [SerializeField] private Transform headPos;      // eyes/aim origin
     [SerializeField] private Animator animator;
     [SerializeField] private DamageableHealth health; // your shared health
@@ -20,6 +21,14 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
     [SerializeField] private float sightRange = 12f;
     [SerializeField] private float attackRange = 2.2f;   // set higher for mages
     [SerializeField] private float timeBetweenAttacks = 1.25f;
+    [SerializeField] private LayerMask playerLayer = 1 << 7;        // set to your Player layer
+    [SerializeField] private LayerMask visionBlockers = ~0;          // set to: Default, Walls, etc (NOT Player)
+    [SerializeField, Range(0.05f, 0.3f)] private float eyeRadius = 0.12f; // spherecast thickness
+
+    [Header("Alert / Investigate")]
+    [SerializeField] private float investigateTime = 3f;
+    private float _alertTimer;
+    private Vector3 _lastKnownPlayerPos;
 
     [Header("Patrol")]
     [SerializeField] private float walkPointRange = 8f;
@@ -48,6 +57,7 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
     private Color colorOrig;
     private Vector3 walkPoint;
     private bool walkPointSet;
+    private bool _didPostBakeSnap;
 
     void Start()
     {
@@ -55,14 +65,35 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
 
         if (!agent) agent = GetComponent<NavMeshAgent>();
             agent.stoppingDistance = Mathf.Max(0.05f, attackRange * 0.75f);
+        agent.autoRepath = true;
+        agent.autoBraking = true;
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+        agent.avoidancePriority = Random.Range(20, 80);
         if (!model) model = GetComponentInChildren<Renderer>();
         if (!headPos) headPos = transform;
         if (!health) health = GetComponent<DamageableHealth>();
 
         if (agent) agent.updateRotation = false;
-        if (model) colorOrig = model.material.color;
+        if (model)
+        {
+            colorOrig = model.material.color;
+            _cachedMat = model.material;
+        }
+        StartCoroutine(SnapAgentNextFrame());
+    }
 
-        if (behavior == BehaviorType.Mage && !castPoint) castPoint = headPos;
+    private IEnumerator SnapAgentNextFrame()
+    {
+        yield return null;
+
+        if (!agent) yield break;
+
+        //try to fins navmesh under the current transform
+        if (NavMesh.SamplePosition(agent.transform.position, out var hit, 3.0f, agent.areaMask))
+        {
+            agent.Warp(hit.position);
+            _didPostBakeSnap = true;
+        }
     }
 
     void Update()
@@ -79,6 +110,22 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
         bool inSight = dist <= sightRange && CanSeePlayer();
         bool inRange = dist <= attackRange;
 
+        // Decay alert
+        if (_alertTimer > 0f) _alertTimer -= Time.deltaTime;
+
+        // If alerted (recently hit) but no sight, move to last known position
+        if (_alertTimer > 0f && agent && !CanSeePlayer())
+        {
+            if (NavMesh.SamplePosition(_lastKnownPlayerPos, out var hit, 1.2f, agent.areaMask))
+                agent.SetDestination(hit.position);
+            else
+                agent.SetDestination(_lastKnownPlayerPos);
+
+            FaceMoveDirection();
+            if (animator) animator.SetFloat("Speed", agent.velocity.magnitude);
+            return; // skip regular logic this frame
+        }
+
         if (!inSight && !inRange) Patrolling();
         else if (inSight && !inRange) ChasePlayer();
         else if (inSight && inRange) AttackPlayer();
@@ -91,11 +138,18 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
         var player = gameManager.instance.player;
         if (!player) return false;
 
-        Vector3 toPlayer = player.transform.position - headPos.position;
-        if (Vector3.Angle(toPlayer, transform.forward) > FOV) return false;
+        // angle check (use half-FOV)
+        Vector3 toPlayer = (player.transform.position + Vector3.up * 0.9f) - headPos.position;
+        if (Vector3.Angle(toPlayer, transform.forward) > (FOV * 0.5f)) return false;
 
-        if (Physics.Raycast(headPos.position, toPlayer.normalized, out RaycastHit hit, sightRange))
+        float dist = toPlayer.magnitude;
+        Vector3 dir = toPlayer / Mathf.Max(dist, 0.0001f);
+
+        // SphereCast against both player + blocking geometry and see what we hit first
+        int mask = playerLayer | visionBlockers;
+        if (Physics.SphereCast(headPos.position, eyeRadius, dir, out RaycastHit hit, sightRange, mask, QueryTriggerInteraction.Ignore))
         {
+            // Must hit the player FIRST; if a wall is closer, LOS is blocked
             if (hit.collider.CompareTag("Player"))
             {
                 if (agent && agent.remainingDistance <= agent.stoppingDistance) FaceTarget();
@@ -114,6 +168,12 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
         if (walkPointSet) agent.SetDestination(walkPoint);
 
         FaceMoveDirection();
+
+        if (agent.hasPath && agent.pathStatus == NavMeshPathStatus.PathPartial)
+        {
+            // re-pick point if partial path
+            walkPointSet = false;
+        }
 
         if ((transform.position - walkPoint).magnitude < 1f)
             walkPointSet = false;
@@ -134,16 +194,27 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
 
     void ChasePlayer()
     {
+        if (!agent) return;
         var player = gameManager.instance.player;
-        if (!player || !agent) return;
+        if (!player) return;
+
+        // Sample near the player to avoid invalid destinations on edges
+        if (UnityEngine.AI.NavMesh.SamplePosition(player.transform.position, out var hit, 1.0f, agent.areaMask))
+            agent.SetDestination(hit.position);
+        else
+            agent.SetDestination(player.transform.position);
 
         agent.isStopped = false;
-        agent.SetDestination(player.transform.position);
 
-        if (behavior == BehaviorType.Melee)
-            FaceTargetHard();
-        else
-            FaceMoveDirection();
+        if (behavior == BehaviorType.Melee) FaceTargetHard();
+        else FaceMoveDirection();
+
+        // If path is invalid or partial for too long, pick a nearby patrol point to unstick
+        if (!agent.hasPath || agent.pathStatus == NavMeshPathStatus.PathInvalid)
+        {
+            SearchWalkPoint();
+            if (walkPointSet) agent.SetDestination(walkPoint);
+        }
     }
 
     void FaceTarget()
@@ -156,6 +227,12 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
 
         Quaternion target = Quaternion.LookRotation(flat);
         transform.rotation = Quaternion.Lerp(transform.rotation, target, Time.deltaTime * faceTargetSpeed);
+    }
+
+    public void OnDamaged(Vector3 attackerPos)
+    {
+        _lastKnownPlayerPos = attackerPos;
+        _alertTimer = investigateTime;
     }
 
     // --------- Attack ---------
@@ -286,17 +363,16 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
     // --------- Feedback / Death ---------
     public void FlashDamage()
     {
-        if (!model) return;
+        if (!_cachedMat) return;
         StartCoroutine(FlashRed());
     }
 
-    IEnumerator FlashRed()
+    private IEnumerator FlashRed()
     {
-        var mat = model.material;
-        var prev = mat.color;
-        mat.color = Color.red;
+        var prev = _cachedMat.color;
+        _cachedMat.color = Color.red;
         yield return new WaitForSeconds(0.1f);
-        mat.color = prev;
+        _cachedMat.color = prev;
     }
 
     private void HandleDeath()

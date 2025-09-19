@@ -51,7 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Pickup
   type: 0
   amount: 25
-  consumeIfFull: 1
+  consumeIfFull: 0
 --- !u!33 &3837782914230561498
 MeshFilter:
   m_ObjectHideFlags: 0
