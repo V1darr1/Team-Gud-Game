@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 4592473023326266213}
   - component: {fileID: 2354245450480479541}
   - component: {fileID: -346101511868554955}
-  m_Layer: 7
-  m_Name: p_Firebolt
+  m_Layer: 8
+  m_Name: e_FirRbolt_new
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -120,7 +120,7 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 64
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
@@ -169,7 +169,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 765511271821131592, guid: 3e0a192079d838344972feec1d3ce762, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 765511271821131594, guid: 3e0a192079d838344972feec1d3ce762, type: 3}
       propertyPath: m_CollisionDetection
