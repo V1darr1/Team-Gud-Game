@@ -51,6 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SimpleProjectile
   speed: 30
   lifetime: 5
+  hitVFX: {fileID: 162584487599433031, guid: 39f852c28f9c3fd45a427c24f3564ba7, type: 3}
   drawGizmoForward: 0
 --- !u!33 &1367172956204670222
 MeshFilter:
@@ -465,7 +466,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 765511271821131607, guid: 3e0a192079d838344972feec1d3ce762, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.0092412
+      value: -0.025
       objectReference: {fileID: 0}
     - target: {fileID: 765511271821131607, guid: 3e0a192079d838344972feec1d3ce762, type: 3}
       propertyPath: m_LocalRotation.w
@@ -528,4 +529,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SimpleProjectile
   speed: 30
   lifetime: 5
+  hitVFX: {fileID: 0}
   drawGizmoForward: 0
