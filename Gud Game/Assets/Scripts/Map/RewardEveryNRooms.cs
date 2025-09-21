@@ -8,8 +8,7 @@ public class RewardEveryNRooms : MonoBehaviour
 
     void Awake()
     {
-        // Auto-find if not assigned
-        if (!rewardUI) rewardUI = FindObjectOfType<RewardUI>(includeInactive: true);
+        
     }
 
     void OnEnable() { TrySubscribe(); }
