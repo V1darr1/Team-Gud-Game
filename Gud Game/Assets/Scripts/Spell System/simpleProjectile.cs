@@ -11,6 +11,9 @@ public class SimpleProjectile : MonoBehaviour
     [Tooltip("How many seconds this projectile lives before auto-destroying.")]
     [SerializeField] private float lifetime = 5f;
 
+    [Header("VFX")]
+    [SerializeField] private GameObject hitVFX;
+
     [Header("Debug/Effects (optional)")]
     [Tooltip("If true, draws a short gizmo ray in Scene view to show forward direction.")]
     [SerializeField] private bool drawGizmoForward = false;
@@ -60,9 +63,16 @@ public class SimpleProjectile : MonoBehaviour
         if (dmg != null && dmg.IsAlive)
             dmg.ApplyDamage(_damage);
 
+        if (hitVFX)
+        {
+            Vector3 hitPos = other.ClosestPoint(transform.position);
+            Vector3 normal = (transform.position - hitPos).normalized;
+            var rot = Quaternion.LookRotation(normal, Vector3.up);
+            var vfx = Instantiate(hitVFX, hitPos, rot);
+            Destroy(vfx, 2f);
+        }
+
         Destroy(gameObject);
-
-
     }
  
 

@@ -32,6 +32,9 @@ public class KillAllEnemiesObjective : MonoBehaviour, IRoomObjective
         }
 
         Debug.Log($"[Objective] Alive at start: {_alive}", this);
+
+        if (gameManager.instance) gameManager.instance.SetEnemiesRemaining(_alive);
+
         if (_alive == 0) Complete();
     }
 
@@ -46,6 +49,7 @@ public class KillAllEnemiesObjective : MonoBehaviour, IRoomObjective
         if (IsComplete) return;
         _alive = Mathf.Max(0, _alive - 1);
         Debug.Log($"[Objective] Enemy died → remaining: {_alive}", this);
+        if (gameManager.instance) gameManager.instance.SetEnemiesRemaining(_alive);
         if (_alive == 0) Complete();
     }
 
@@ -54,6 +58,7 @@ public class KillAllEnemiesObjective : MonoBehaviour, IRoomObjective
         if (IsComplete) return;
         IsComplete = true;
         Debug.Log("[Objective] COMPLETE", this);
+        if (gameManager.instance) gameManager.instance.SetEnemiesRemaining(0);
         OnCompleted?.Invoke(this);
     }
 }
