@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8dae8aba6698a71458739b6a2d08b140
+guid: 89492668bba6c274ab79a14e289b90e5
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -109,8 +109,8 @@ ModelImporter:
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 326752
-  packageName: Free Low Poly Cubic Humans - 3D by Shokubutsu
+  productId: 322530
+  packageName: Cubic Characters - Low poly 3D by Shokubutsu
   packageVersion: 1.0
   assetPath: Assets/Shokubutsu Studio/Free Low Poly Cubic Humans/Models/Characters/NPC/NPC_02.fbx
-  uploadId: 773318
+  uploadId: 766413

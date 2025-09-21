@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7db1fb36e1d96cf4c8ebf3c2731e8677
+guid: b49889058676dfe408a9ea9f2f34ec43
 PrefabImporter:
   externalObjects: {}
   userData: 
@@ -7,8 +7,8 @@ PrefabImporter:
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 326752
-  packageName: Free Low Poly Cubic Humans - 3D by Shokubutsu
+  productId: 322530
+  packageName: Cubic Characters - Low poly 3D by Shokubutsu
   packageVersion: 1.0
   assetPath: Assets/Shokubutsu Studio/Free Low Poly Cubic Humans/URP/Prefabs/Characters/NPC/NPC_01.prefab
-  uploadId: 773318
+  uploadId: 766413

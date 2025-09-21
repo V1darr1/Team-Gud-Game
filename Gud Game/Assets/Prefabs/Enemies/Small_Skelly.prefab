@@ -244,6 +244,7 @@ MonoBehaviour:
   dropChance: 0.25
   healthPickup: {fileID: 9181176699362758715, guid: 547ef026d8576844f9287af744958fcd, type: 3}
   manaPickup: {fileID: 3093340706528911704, guid: a468edaae5d02394b879ab90d280af6a, type: 3}
+  doubleDmgPickup: {fileID: 4795615329670273777, guid: 3489854c64e534c448206908d237e25d, type: 3}
   spawnHeight: 0.4
   scatter: 0.3
 --- !u!95 &8673746140320868096

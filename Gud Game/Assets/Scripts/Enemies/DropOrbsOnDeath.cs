@@ -4,12 +4,17 @@ public class DropOrbsOnDeath : MonoBehaviour
 {
     [Range(0f, 1f)] public float dropChance = 0.25f;
     [Header("Orb Prefabs")]
-    public GameObject healthPickup;
-    public GameObject manaPickup;
+    [SerializeField] public GameObject healthPickup;
+    [SerializeField] public GameObject manaPickup;
+    [SerializeField] public GameObject doubleDmgPickup;
+
+    [SerializeField, Range(0f, 1f)] private float healthChance = 0.25f;
+    [SerializeField, Range(0f, 1f)] private float manaChance = 0.25f;
+    [SerializeField, Range(0f, 1f)] private float doubleChance = 0.15f;
 
     [Header("Spawn tuning")]
-    public float spawnHeight = 0.4f;
-    public float scatter = 0.3f;
+    [SerializeField] public float spawnHeight = 0.4f;
+    [SerializeField] public float scatter = 0.3f;
 
     DamageableHealth _hp;
 
@@ -27,14 +32,32 @@ public class DropOrbsOnDeath : MonoBehaviour
 
     void HandleDeath(DamageableHealth _)
     {
-        if (Random.value >= dropChance) return;
+        // roll between 0–1
+        float roll = Random.value;
+        GameObject prefab = null;
 
-        bool dropHealth = Random.value < 0.5f;
-        var prefab = dropHealth ? healthPickup : manaPickup;
+        if (roll < healthChance)
+        {
+            prefab = healthPickup;
+        }
+        else if (roll < healthChance + manaChance)
+        {
+            prefab = manaPickup;
+        }
+        else if (roll < healthChance + manaChance + doubleChance)
+        {
+            prefab = doubleDmgPickup;
+        }
+        else
+        {
+            // no drop
+            return;
+        }
+
         if (!prefab) return;
 
         var pos = transform.position
-            +Vector3.up * spawnHeight
+            + Vector3.up * spawnHeight
             + new Vector3(Random.Range(-scatter, scatter), 0f, Random.Range(-scatter, scatter));
 
         Instantiate(prefab, pos, Quaternion.identity);

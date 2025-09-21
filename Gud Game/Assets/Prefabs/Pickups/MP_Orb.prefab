@@ -52,6 +52,7 @@ MonoBehaviour:
   type: 1
   amount: 50
   consumeIfFull: 0
+  doubleDamageDuration: 0
 --- !u!33 &2188380375003401753
 MeshFilter:
   m_ObjectHideFlags: 0

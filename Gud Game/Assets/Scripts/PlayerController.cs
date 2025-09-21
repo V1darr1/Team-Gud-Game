@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour, iSpellCaster
     [Tooltip("Maximum mana the caster can hold.")]
     [SerializeField] private float manaMax = 100f;
     private float _mana, _cooldownTimer;
+    private float damageMultiplier = 1f;
 
     [Tooltip("Mana regenerated per second.")]
     [SerializeField] private float manaRegenPerSec = 10f;
@@ -128,6 +129,15 @@ public class PlayerController : MonoBehaviour, iSpellCaster
             Debug.Log($"Mana +{amount}. MP: {_mana}/{manaMax}");
         }
     }
+
+    public IEnumerator ApplyDoubleDamage(float duration)
+    {
+        damageMultiplier = 2f;
+
+        yield return new WaitForSeconds(duration);
+
+        damageMultiplier = 1f;
+    }
     
     // Quick checks: enough mana and cooldown ready.
     public bool CanCast(iSpell spell)
@@ -163,7 +173,8 @@ public class PlayerController : MonoBehaviour, iSpellCaster
         var projectile = projGO.GetComponent<SimpleProjectile>();
         if (projectile != null)
         {
-            projectile.Init(damage: spell.Damage, direction: direction);
+            float scaledDamage = spell.Damage * damageMultiplier;
+            projectile.Init(scaledDamage, direction);
         }
         else
         {
