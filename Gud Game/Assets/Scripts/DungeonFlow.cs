@@ -38,6 +38,8 @@ public class DungeonFlow : MonoBehaviour
         _spawned.Add(firstRoom);
         Debug.Log($"[DungeonFlow] Spawned START room '{firstRoom.name}'");
 
+        if (gameManager.instance) gameManager.instance.SetRoomsCompleted(0);
+
         // 1) Disable agents so they can't project to the wrong NavMesh yet
         var startAgents = firstRoom.GetComponentsInChildren<UnityEngine.AI.NavMeshAgent>(true);
         foreach (var a in startAgents) if (a && a.enabled) a.enabled = false;
@@ -233,6 +235,8 @@ public class DungeonFlow : MonoBehaviour
                 nextDoor.enabled = true;
             }
         }
+
+        if (gameManager.instance) gameManager.instance.IncrementRoomsCompleted();
 
         // ---------- CLEANUP ----------
         CullOldRooms();

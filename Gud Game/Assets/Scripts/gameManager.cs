@@ -2,6 +2,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class gameManager : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject settingsMenu;
     [SerializeField] Camera mainCam;
+    [SerializeField] TMP_Text enemiesRemainingText;
+    [SerializeField] TMP_Text roomsCompletedText;
 
     [HideInInspector] public GameObject menuActive;
    
@@ -31,6 +34,9 @@ public class gameManager : MonoBehaviour
     public bool isPaused;
     public bool yInvertON;
     public bool yInvertOFF;
+
+    private int enemiesRemaining;
+    private int roomsCompleted;
 
     int gameGoalCount;
     float timeScaleOrig;
@@ -176,5 +182,31 @@ public class gameManager : MonoBehaviour
         
            playerHPBar.fillAmount = (playerDamageableHealth.CurrentHealth / playerDamageableHealth.MaxHealth);
           playerMPBar.fillAmount = (playerController.CurrentMana / playerController.MaxMana);
+    }
+
+    public void SetEnemiesRemaining(int value)
+    {
+        enemiesRemaining = Mathf.Max(0, value);
+        if (enemiesRemainingText) enemiesRemainingText.text = $"{enemiesRemaining}";
+    }
+
+    public void SetRoomsCompleted(int value)
+    {
+        roomsCompleted = Mathf.Max(0, value);
+        if (roomsCompletedText) roomsCompletedText.text = $"{roomsCompleted}";
+    }
+
+    public void IncrementRoomsCompleted()
+    {
+        SetRoomsCompleted(roomsCompleted + 1);
+    }
+
+    public void DecrementEnemyCount() => SetEnemiesRemaining(enemiesRemaining - 1);
+    public void IncrementEnemyCount() => SetEnemiesRemaining(enemiesRemaining + 1);
+
+    private void RefreshAllUI()
+    {
+        SetEnemiesRemaining(enemiesRemaining);
+        SetRoomsCompleted(roomsCompleted);
     }
 }
