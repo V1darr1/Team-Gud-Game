@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class Pickup : MonoBehaviour
 {
-    public enum PickupType { Health, Mana }
+    public enum PickupType { Health, Mana, Firejolt}
     public PickupType type = PickupType.Health;
     public float amount = 25f;
     public bool consumeIfFull = false;
@@ -37,6 +37,8 @@ public class Pickup : MonoBehaviour
                     consumed = (pc.CurrentMana > before || consumeIfFull);
                 }
                 break;
+
+                
         }
         if (consumed)
             Destroy(gameObject);

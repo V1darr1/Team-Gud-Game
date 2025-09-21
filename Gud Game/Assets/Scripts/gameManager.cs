@@ -32,6 +32,9 @@ public class gameManager : MonoBehaviour
     public bool yInvertON;
     public bool yInvertOFF;
 
+    public System.Action OnRoomCleared;
+    public int roomsClearedThisRun;
+
     int gameGoalCount;
     float timeScaleOrig;
 
