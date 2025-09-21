@@ -489,57 +489,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   aoeVFX: {fileID: 2040460775051823323, guid: e87c97282711c884ba583a33670a1e78, type: 3}
---- !u!1 &894640480
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 894640482}
-  - component: {fileID: 894640481}
-  m_Layer: 0
-  m_Name: Dungeon Flow
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &894640481
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 894640480}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e821087849dcc64bb481e93d1c77109, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DungeonFlow
-  startRoom: {fileID: 11400000, guid: 9f5a528532c60e541bfea8426a1eeef2, type: 2}
-  pool:
-  - {fileID: 11400000, guid: 9f5a528532c60e541bfea8426a1eeef2, type: 2}
-  - {fileID: 11400000, guid: d2462d797856757468aaced148b2332d, type: 2}
-  - {fileID: 11400000, guid: 98fbe987d43ab0e4ebb586d5c0fb8fa6, type: 2}
-  doorOffset: 4
-  keepRooms: 1
---- !u!4 &894640482
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 894640480}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 35.52493, y: 0.98305, z: -111.84536}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1262251054 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4938516272852871968, guid: 3a3d0fe344c7e164abd53c5a65edb9a7, type: 3}
@@ -556,6 +505,57 @@ Camera:
   m_CorrespondingSourceObject: {fileID: 4075401633023880946, guid: 0f215b1dacaef834d99413ad1e76dfc7, type: 3}
   m_PrefabInstance: {fileID: 36567856}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1630012329
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1630012331}
+  - component: {fileID: 1630012330}
+  m_Layer: 0
+  m_Name: Dungeon Flow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1630012330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630012329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e821087849dcc64bb481e93d1c77109, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DungeonFlow
+  startRoom: {fileID: 11400000, guid: 9f5a528532c60e541bfea8426a1eeef2, type: 2}
+  pool:
+  - {fileID: 11400000, guid: 9f5a528532c60e541bfea8426a1eeef2, type: 2}
+  - {fileID: 11400000, guid: d2462d797856757468aaced148b2332d, type: 2}
+  - {fileID: 11400000, guid: 98fbe987d43ab0e4ebb586d5c0fb8fa6, type: 2}
+  doorOffset: 4
+  keepRooms: 1
+--- !u!4 &1630012331
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630012329}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 35.52493, y: 0.98305, z: -111.84536}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1963412208 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5763207600184449893, guid: 3a3d0fe344c7e164abd53c5a65edb9a7, type: 3}
@@ -584,5 +584,5 @@ SceneRoots:
   m_Roots:
   - {fileID: 413432551}
   - {fileID: 36567856}
-  - {fileID: 894640482}
+  - {fileID: 1630012331}
   - {fileID: 608527600}
