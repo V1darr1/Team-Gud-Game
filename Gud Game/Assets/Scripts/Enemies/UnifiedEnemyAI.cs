@@ -523,6 +523,33 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
         return false;
     }
 
+    // ----HEAD TRACKING----
+    void OnAnimatorIK(int layerIndex)
+    {
+        if (!animator) return;
+
+        var player = gameManager.instance?.player;
+        if (!player) return;
+
+        // Point of interest (you can offset upward a bit to aim at the chest/head)
+        Vector3 targetPos = player.transform.position + Vector3.up * 1.5f;
+
+        // How strongly the enemy looks at the target (blendable)
+        float weight = 1.0f;
+
+        // IK settings
+        animator.SetLookAtWeight(
+            weight,        // global weight
+            0.3f,          // body weight
+            0.6f,          // head weight
+            1.0f,          // eyes weight
+            0.5f           // clamp weight (limits max rotation)
+        );
+
+        // Apply look-at target
+        animator.SetLookAtPosition(targetPos);
+    }
+
     IEnumerator RepathSoon()
     {
         yield return new WaitForSeconds(0.35f);
