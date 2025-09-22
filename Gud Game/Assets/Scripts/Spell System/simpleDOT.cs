@@ -1,61 +1,65 @@
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 public class SimpleDOT : MonoBehaviour
 {
-    [Tooltip("Damage per second while inside.")]
     public float damagePerSecond = 15f;
-
-    [Tooltip("Only damage objects with this tag (usually 'Player'). Leave empty to affect any iDamageable.")]
     public string onlyAffectTag = "Player";
-
-    [Tooltip("If true, require the tag above to match. If false, anything implementing iDamageable takes damage.")]
     public bool requireTagMatch = true;
 
-    // Store running coroutines so we can stop them on exit
-    private readonly Dictionary<Collider, Coroutine> active = new Dictionary<Collider, Coroutine>();
+    // Track by root transform, so one coroutine per target
+    private readonly Dictionary<Transform, Coroutine> _running = new();
 
     private void Reset()
     {
-        var col = GetComponent<Collider>();
-        if (col != null) col.isTrigger = true;
+        var c = GetComponent<Collider>();
+        if (c) c.isTrigger = true;
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (requireTagMatch && !string.IsNullOrEmpty(onlyAffectTag) && !other.CompareTag(onlyAffectTag) || other.isTrigger)
+        if (other.isTrigger) return;
+        if (requireTagMatch && !string.IsNullOrEmpty(onlyAffectTag) && !other.CompareTag(onlyAffectTag))
             return;
 
-        iDamageable dmg = other.GetComponentInParent<iDamageable>();
+        var comp = other.GetComponentInParent<iDamageable>() as Component;
+        if (!comp) return;
+
+        var key = comp.transform.root;
+        if (_running.ContainsKey(key)) return; // already ticking
+
+        var dmg = comp.GetComponent<iDamageable>();
         if (dmg == null) return;
 
-        if (!active.ContainsKey(other))
-        {
-            Coroutine c = StartCoroutine(DamageLoop(dmg));
-            active[other] = c;
-        }
+        _running[key] = StartCoroutine(DamageLoop(dmg));
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (active.TryGetValue(other, out Coroutine c))
+        var root = other.transform.root;
+        if (_running.TryGetValue(root, out var co))
         {
-            StopCoroutine(c);
-            active.Remove(other);
+            StopCoroutine(co);
+            _running.Remove(root);
         }
+    }
+
+    private void OnDisable()
+    {
+        foreach (var kv in _running)
+            if (kv.Value != null) StopCoroutine(kv.Value);
+        _running.Clear();
     }
 
     private IEnumerator DamageLoop(iDamageable target)
     {
-        while (true)
+        while (target != null && target.IsAlive)
         {
-            float dmgThisFrame = damagePerSecond * Time.deltaTime;
-            if (dmgThisFrame > 0f)
-                target.ApplyDamage(dmgThisFrame);
-
-            yield return null; // next frame
+            float dmg = damagePerSecond * Time.deltaTime;
+            if (dmg > 0f) target.ApplyDamage(dmg);
+            yield return null;
         }
     }
 }

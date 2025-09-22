@@ -10,6 +10,7 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
     [SerializeField] private BehaviorType behavior = BehaviorType.Melee;
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private Renderer model;
+    private Material _cachedMat;
     [SerializeField] private Transform headPos;      // eyes/aim origin
     [SerializeField] private Animator animator;
     [SerializeField] private DamageableHealth health; // your shared health
@@ -20,6 +21,14 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
     [SerializeField] private float sightRange = 12f;
     [SerializeField] private float attackRange = 2.2f;   // set higher for mages
     [SerializeField] private float timeBetweenAttacks = 1.25f;
+    [SerializeField] private LayerMask playerLayer = 1 << 7;        // set to your Player layer
+    [SerializeField] private LayerMask visionBlockers = ~0;          // set to: Default, Walls, etc (NOT Player)
+    [SerializeField, Range(0.05f, 0.3f)] private float eyeRadius = 0.12f; // spherecast thickness
+
+    [Header("Alert / Investigate")]
+    [SerializeField] private float investigateTime = 3f;
+    private float _alertTimer;
+    private Vector3 _lastKnownPlayerPos;
 
     [Header("Patrol")]
     [SerializeField] private float walkPointRange = 8f;
@@ -48,25 +57,87 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
     private Color colorOrig;
     private Vector3 walkPoint;
     private bool walkPointSet;
+    private bool _didPostBakeSnap;
+
+    // --- Unstuck ---
+    [SerializeField] private float stuckCheckInterval = 0.25f;
+    [SerializeField] private float stuckIfSpeedBelow = 0.05f;
+    [SerializeField] private float stuckForSeconds = 0.8f;
+    [SerializeField] private float sideStepDistance = 1.2f;
+
+    float _stillTimer;
+    Vector3 _lastPos;
+
+    bool EnsureAgentOnNavMesh()
+    {
+        if (!agent || !agent.isActiveAndEnabled) return false;
+
+        if (agent.isOnNavMesh) return true;
+
+        // Try to snap to the nearest valid point under/near us
+        if (NavMesh.SamplePosition(transform.position, out var hit, 3f, agent.areaMask))
+        {
+            agent.Warp(hit.position);        // Warp does not require being on-navmesh beforehand
+            return agent.isOnNavMesh;
+        }
+
+        return false; // nowhere valid nearby yet
+    }
 
     void Start()
     {
-        gameManager.instance.updateGameGoal(1);
+        agent = GetComponent<NavMeshAgent>();
+        health = GetComponent<DamageableHealth>();
 
-        if (!agent) agent = GetComponent<NavMeshAgent>();
-            agent.stoppingDistance = Mathf.Max(0.05f, attackRange * 0.75f);
         if (!model) model = GetComponentInChildren<Renderer>();
-        if (!headPos) headPos = transform;
-        if (!health) health = GetComponent<DamageableHealth>();
+        if (model)
+        {
+            _cachedMat = model.material;
+            colorOrig = _cachedMat.color;
+        }
 
-        if (agent) agent.updateRotation = false;
-        if (model) colorOrig = model.material.color;
+        if (agent)
+        {
+            agent.updateRotation = false;
+            agent.autoRepath = true;
+            agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+            agent.stoppingDistance = Mathf.Max(agent.stoppingDistance, 0.6f);
 
-        if (behavior == BehaviorType.Mage && !castPoint) castPoint = headPos;
+            // ensure we’re actually placed on the NavMesh after the room finishes baking
+            StartCoroutine(SnapAgentNextFrame());
+        }
+        else
+        {
+            Debug.LogWarning($"{name}: NavMeshAgent missing.", this);
+        }
+
+        InvokeRepeating(nameof(CheckStuck), stuckCheckInterval, stuckCheckInterval);
+    }
+
+    void OnEnable()
+    {
+        // if this enemy is enabled after a room transition, snap again next frame
+        if (agent && agent.enabled) StartCoroutine(SnapAgentNextFrame());
+    }
+
+    private IEnumerator SnapAgentNextFrame()
+    {
+        yield return null;
+
+        if (!agent) yield break;
+
+        //try to fins navmesh under the current transform
+        if (NavMesh.SamplePosition(agent.transform.position, out var hit, 3.0f, agent.areaMask))
+        {
+            agent.Warp(hit.position);
+            _didPostBakeSnap = true;
+        }
     }
 
     void Update()
     {
+        if (!EnsureAgentOnNavMesh()) return;
+        
         // Let DamageableHealth own alive/dead state
         if (health && !health.IsAlive) { HandleDeath(); return; }
 
@@ -78,6 +149,22 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
         float dist = Vector3.Distance(transform.position, player.transform.position);
         bool inSight = dist <= sightRange && CanSeePlayer();
         bool inRange = dist <= attackRange;
+
+        // Decay alert
+        if (_alertTimer > 0f) _alertTimer -= Time.deltaTime;
+
+        // If alerted (recently hit) but no sight, move to last known position
+        if (_alertTimer > 0f && agent && !CanSeePlayer())
+        {
+            if (NavMesh.SamplePosition(_lastKnownPlayerPos, out var hit, 1.2f, agent.areaMask))
+                agent.SetDestination(hit.position);
+            else
+                agent.SetDestination(_lastKnownPlayerPos);
+
+            FaceMoveDirection();
+            if (animator) animator.SetFloat("Speed", agent.velocity.magnitude);
+            return; // skip regular logic this frame
+        }
 
         if (!inSight && !inRange) Patrolling();
         else if (inSight && !inRange) ChasePlayer();
@@ -91,11 +178,18 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
         var player = gameManager.instance.player;
         if (!player) return false;
 
-        Vector3 toPlayer = player.transform.position - headPos.position;
-        if (Vector3.Angle(toPlayer, transform.forward) > FOV) return false;
+        // angle check (use half-FOV)
+        Vector3 toPlayer = (player.transform.position + Vector3.up * 0.9f) - headPos.position;
+        if (Vector3.Angle(toPlayer, transform.forward) > (FOV * 0.5f)) return false;
 
-        if (Physics.Raycast(headPos.position, toPlayer.normalized, out RaycastHit hit, sightRange))
+        float dist = toPlayer.magnitude;
+        Vector3 dir = toPlayer / Mathf.Max(dist, 0.0001f);
+
+        // SphereCast against both player + blocking geometry and see what we hit first
+        int mask = playerLayer | visionBlockers;
+        if (Physics.SphereCast(headPos.position, eyeRadius, dir, out RaycastHit hit, sightRange, mask, QueryTriggerInteraction.Ignore))
         {
+            // Must hit the player FIRST; if a wall is closer, LOS is blocked
             if (hit.collider.CompareTag("Player"))
             {
                 if (agent && agent.remainingDistance <= agent.stoppingDistance) FaceTarget();
@@ -108,12 +202,19 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
     // --------- Locomotion ---------
     void Patrolling()
     {
-        if (!agent) return;
+        if (!agent || !EnsureAgentOnNavMesh()) return;
+
 
         if (!walkPointSet) SearchWalkPoint();
         if (walkPointSet) agent.SetDestination(walkPoint);
 
         FaceMoveDirection();
+
+        if (agent.hasPath && agent.pathStatus == NavMeshPathStatus.PathPartial)
+        {
+            // re-pick point if partial path
+            walkPointSet = false;
+        }
 
         if ((transform.position - walkPoint).magnitude < 1f)
             walkPointSet = false;
@@ -121,29 +222,51 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
 
     void SearchWalkPoint()
     {
-        float rx = Random.Range(-walkPointRange, walkPointRange);
-        float rz = Random.Range(-walkPointRange, walkPointRange);
-        Vector3 candidate = new Vector3(transform.position.x + rx, transform.position.y + 2f, transform.position.z + rz);
+        // pick a random direction on XZ plane
+        Vector2 r = Random.insideUnitCircle * walkPointRange;
+        Vector3 candidate = new Vector3(transform.position.x + r.x, transform.position.y, transform.position.z + r.y);
 
-        if (Physics.Raycast(candidate, Vector3.down, out RaycastHit hit, 4f, whatIsGround))
+        // snap to the NavMesh near the candidate
+        if (NavMesh.SamplePosition(candidate, out var hit, 2.0f, agent ? agent.areaMask : NavMesh.AllAreas))
         {
-            walkPoint = hit.point;
+            walkPoint = hit.position;
             walkPointSet = true;
+            return;
         }
+
+        walkPointSet = false;
     }
 
     void ChasePlayer()
     {
+        if (!agent || !EnsureAgentOnNavMesh()) return;
+
         var player = gameManager.instance.player;
-        if (!player || !agent) return;
+        if (!player) return;
+
+        // aim a point a bit before the player, so we don't try to overlap them or walls behind them
+        Vector3 toPlayer = player.transform.position - transform.position;
+        Vector3 desired = player.transform.position - toPlayer.normalized * Mathf.Max(agent.stoppingDistance, 0.6f);
+
+        // sample on the mesh
+        if (NavMesh.SamplePosition(desired, out var hit, 1.5f, agent.areaMask))
+            agent.SetDestination(hit.position);
+        else if (NavMesh.SamplePosition(player.transform.position, out hit, 1.5f, agent.areaMask))
+            agent.SetDestination(hit.position);
+        else
+            agent.ResetPath();
 
         agent.isStopped = false;
-        agent.SetDestination(player.transform.position);
 
-        if (behavior == BehaviorType.Melee)
-            FaceTargetHard();
-        else
-            FaceMoveDirection();
+        if (behavior == BehaviorType.Melee) FaceTargetHard();
+        else FaceMoveDirection();
+
+        // if the path is partial/invalid for long, fall back to a patrol point
+        if (!agent.hasPath || agent.pathStatus != NavMeshPathStatus.PathComplete)
+        {
+            SearchWalkPoint();
+            if (walkPointSet) agent.SetDestination(walkPoint);
+        }
     }
 
     void FaceTarget()
@@ -158,10 +281,19 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
         transform.rotation = Quaternion.Lerp(transform.rotation, target, Time.deltaTime * faceTargetSpeed);
     }
 
+    public void OnDamaged(Vector3 attackerPos)
+    {
+        _lastKnownPlayerPos = attackerPos;
+        _alertTimer = investigateTime;
+    }
+
     // --------- Attack ---------
     void AttackPlayer()
     {
-        if (!agent) return;
+        if (!agent || !EnsureAgentOnNavMesh()) return;
+
+        agent.isStopped = true;
+
         agent.SetDestination(transform.position); // stop to attack
         FaceTarget();
 
@@ -286,24 +418,23 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
     // --------- Feedback / Death ---------
     public void FlashDamage()
     {
-        if (!model) return;
+        if (!_cachedMat) return;
         StartCoroutine(FlashRed());
     }
 
-    IEnumerator FlashRed()
+    private IEnumerator FlashRed()
     {
-        var mat = model.material;
-        var prev = mat.color;
-        mat.color = Color.red;
+        var prev = _cachedMat.color;
+        _cachedMat.color = Color.red;
         yield return new WaitForSeconds(0.1f);
-        mat.color = prev;
+        _cachedMat.color = prev;
     }
 
     private void HandleDeath()
     {
         gameManager.instance.updateGameGoal(-1);
 
-        if (agent)
+        if (agent && agent.isOnNavMesh)
         {
             agent.ResetPath();
             agent.isStopped = true;
@@ -348,5 +479,58 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
             Quaternion.LookRotation(dir),
             Time.deltaTime * faceTargetSpeed
         );
+    }
+
+    void CheckStuck()
+    {
+        if (!agent || !agent.isOnNavMesh) return;
+
+        // should we be moving?
+        bool shouldMove = agent.hasPath && !agent.pathPending && agent.remainingDistance > agent.stoppingDistance;
+
+        float moved = (transform.position - _lastPos).magnitude;
+        _lastPos = transform.position;
+
+        if (!shouldMove) { _stillTimer = 0f; return; }
+
+        if (moved < stuckIfSpeedBelow) _stillTimer += stuckCheckInterval;
+        else _stillTimer = 0f;
+
+        if (_stillTimer < stuckForSeconds) return;
+
+        // --- escape: side-step and re-path ---
+        _stillTimer = 0f;
+        agent.ResetPath();
+
+        Vector3 left = Vector3.Cross(Vector3.up, transform.forward).normalized;
+        Vector3 right = -left;
+
+        if (!TryStep(left) && !TryStep(right))
+            TryStep(Random.insideUnitSphere);
+
+        // after a short delay, try again to the true target (player or patrol)
+        StartCoroutine(RepathSoon());
+    }
+
+    bool TryStep(Vector3 dir)
+    {
+        Vector3 target = transform.position + dir.normalized * sideStepDistance;
+        if (NavMesh.SamplePosition(target, out var hit, 1.5f, agent.areaMask))
+        {
+            agent.SetDestination(hit.position);
+            return true;
+        }
+        return false;
+    }
+
+    IEnumerator RepathSoon()
+    {
+        yield return new WaitForSeconds(0.35f);
+
+        var player = gameManager.instance.player;
+        if (player && CanSeePlayer())
+            ChasePlayer();
+        else
+            Patrolling();
     }
 }

@@ -1,3 +1,4 @@
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,6 +18,9 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject settingsMenu;
     [SerializeField] Camera mainCam;
 
+    [SerializeField] TMP_Text enemiesRemainingText;
+    [SerializeField] TMP_Text roomsCompletedText;
+
     [HideInInspector] public GameObject menuActive;
    
     public Image playerHPBar;
@@ -32,8 +36,14 @@ public class gameManager : MonoBehaviour
     public bool yInvertON;
     public bool yInvertOFF;
 
+    public System.Action OnRoomCleared;
+    public int roomsClearedThisRun;
+
     int gameGoalCount;
     float timeScaleOrig;
+
+    private int enemiesRemaining;
+    private int roomsCompleted;
 
 
     void Awake()
@@ -87,6 +97,12 @@ public class gameManager : MonoBehaviour
             if (playerHPBar) playerHPBar.fillAmount = 1f;
             if (playerMPBar) playerMPBar.fillAmount = 1f;
         }
+        if (!player) player = GameObject.FindWithTag("Player");
+        if (!playerController && player) playerController = player.GetComponent<PlayerController>();
+        if (!playerDamageableHealth && player) playerDamageableHealth = player.GetComponent<DamageableHealth>();
+
+        RefreshAllUI();                 // show 0/0 at boot
+        SetRoomsCompleted(0);           // start-of-run baseline
     }
 
     void Update()
@@ -172,9 +188,55 @@ public class gameManager : MonoBehaviour
     }
     void HealthAndMana()
     {
-       
-        
-           playerHPBar.fillAmount = (playerDamageableHealth.CurrentHealth / playerDamageableHealth.MaxHealth);
-          playerMPBar.fillAmount = (playerController.CurrentMana / playerController.MaxMana);
+        if (!player)
+            player = GameObject.FindWithTag("Player");
+
+        if (!playerController && player)
+            playerController = player.GetComponent<PlayerController>();
+
+        if (!playerDamageableHealth && player)
+            playerDamageableHealth = player.GetComponent<DamageableHealth>();
+
+        if (playerDamageableHealth && playerHPBar)
+            playerHPBar.fillAmount = playerDamageableHealth.CurrentHealth / Mathf.Max(1f, playerDamageableHealth.MaxHealth);
+
+        if (playerController && playerMPBar)
+            playerMPBar.fillAmount = playerController.CurrentMana / Mathf.Max(1f, playerController.MaxMana);
     }
+
+    public void NotifyRoomCleared()
+    {
+        roomsClearedThisRun++;
+        SetRoomsCompleted(roomsClearedThisRun);  // keep the HUD in sync
+
+        // Fire event for systems like RewardEveryNRooms
+        OnRoomCleared?.Invoke();
+    }
+
+    public void SetEnemiesRemaining(int value)
+    {
+        enemiesRemaining = Mathf.Max(0, value);
+        if (enemiesRemainingText) enemiesRemainingText.text = $"{enemiesRemaining}";
+    }
+
+    public void SetRoomsCompleted(int value)
+    {
+        roomsCompleted = Mathf.Max(0, value);
+        if (roomsCompletedText) roomsCompletedText.text = $"{roomsCompleted}";
+    }
+
+    public void IncrementRoomsCompleted()
+    {
+        SetRoomsCompleted(roomsCompleted + 1);
+    }
+
+    public void DecrementEnemyCount() => SetEnemiesRemaining(enemiesRemaining - 1);
+    public void IncrementEnemyCount() => SetEnemiesRemaining(enemiesRemaining + 1);
+
+    private void RefreshAllUI()
+    {
+        SetEnemiesRemaining(enemiesRemaining);
+        SetRoomsCompleted(roomsCompleted);
+    }
+
 }

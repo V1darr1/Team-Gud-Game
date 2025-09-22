@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
+using System.Collections;
 
 public class DungeonFlow : MonoBehaviour
 {
@@ -14,28 +15,6 @@ public class DungeonFlow : MonoBehaviour
 
     private readonly List<GameObject> _spawned = new();
     private Transform _player;
-
-    void BuildRoomNavMesh(GameObject roomGO)
-    {
-        var surfaces = roomGO.GetComponentsInChildren<NavMeshSurface>(true);
-        foreach (var s in surfaces)
-        {
-            s.RemoveData();   // safety: clear stale data
-            s.BuildNavMesh(); // build for this instance at its final position/rotation
-        }
-
-        // After building, force agents under this room to sample the new mesh
-        var agents = roomGO.GetComponentsInChildren<UnityEngine.AI.NavMeshAgent>(true);
-        foreach (var a in agents)
-        {
-            bool wasEnabled = a.enabled;
-            a.enabled = false;
-            a.enabled = true; // re-enable to resample
-            a.Warp(a.transform.position); // snap to nearest poly of the new mesh
-        }
-
-        Debug.Log($"[Flow] Built {surfaces.Length} NavMeshSurface(s) and warped {agents.Length} agent(s) in '{roomGO.name}'.");
-    }
 
     void Start()
     {
@@ -58,6 +37,27 @@ public class DungeonFlow : MonoBehaviour
         var firstRoom = Instantiate(startRoom.roomPrefab, Vector3.zero, Quaternion.identity);
         _spawned.Add(firstRoom);
         Debug.Log($"[DungeonFlow] Spawned START room '{firstRoom.name}'");
+
+        if (gameManager.instance) gameManager.instance.SetRoomsCompleted(0);
+
+        // 1) Disable agents so they can't project to the wrong NavMesh yet
+        var startAgents = firstRoom.GetComponentsInChildren<UnityEngine.AI.NavMeshAgent>(true);
+        foreach (var a in startAgents) if (a && a.enabled) a.enabled = false;
+
+        // 2) Bake the room's NavMesh exactly once
+        RoomNavBaker.EnsureAndBuild(firstRoom);
+
+        // 3) Re-enable and snap agents onto the baked mesh
+        foreach (var a in startAgents)
+        {
+            if (!a) continue;
+            a.enabled = true;
+
+            if (UnityEngine.AI.NavMesh.SamplePosition(a.transform.position, out var hit, 3.0f, a.areaMask))
+                a.Warp(hit.position);
+            else
+                a.Warp(a.transform.position); // fallback: keep local position
+        }
 
         // 3) teleport the player to the room's PlayerSpawn
         var spawn = FindPlayerSpawn(firstRoom) ?? FallbackSpawn(firstRoom);
@@ -166,8 +166,24 @@ public class DungeonFlow : MonoBehaviour
             Debug.LogWarning("[Flow] Using fallback placement (no matching door).");
         }
 
-        // Build navmesh for newly placed room
-        BuildRoomNavMesh(nextGO);
+        // 1) Disable all agents in the new room so they can't latch onto the old mesh
+        var agents = nextGO.GetComponentsInChildren<UnityEngine.AI.NavMeshAgent>(true);
+        foreach (var a in agents) if (a && a.enabled) a.enabled = false;
+
+        // 2) Bake the room once (synchronous)
+        RoomNavBaker.EnsureAndBuild(nextGO);
+
+        // 3) Re-enable and snap each agent to the new baked mesh
+        foreach (var a in agents)
+        {
+            if (!a) continue;
+            a.enabled = true;
+
+            if (UnityEngine.AI.NavMesh.SamplePosition(a.transform.position, out var hit, 3.0f, a.areaMask))
+                a.Warp(hit.position);
+            else
+                a.Warp(a.transform.position);
+        }
 
         // ---------- TELEPORT (with safe fallback) ----------
         Vector3 spawnPos;
@@ -220,6 +236,8 @@ public class DungeonFlow : MonoBehaviour
             }
         }
 
+        if (gameManager.instance) gameManager.instance.IncrementRoomsCompleted();
+
         // ---------- CLEANUP ----------
         CullOldRooms();
     }
@@ -268,11 +286,21 @@ public class DungeonFlow : MonoBehaviour
         return null;
     }
 
+    IEnumerator SafeDestroy(GameObject room)
+    {
+        // let physics/AI finish this frame
+        yield return null;
+        if (room) Destroy(room);
+    }
+
+    // change CullOldRooms to use it
     void CullOldRooms()
     {
         if (_spawned.Count <= keepRooms) return;
+
         var toDestroy = _spawned[0];
         _spawned.RemoveAt(0);
-        if (toDestroy) Destroy(toDestroy);
+
+        if (toDestroy) StartCoroutine(SafeDestroy(toDestroy));
     }
 }

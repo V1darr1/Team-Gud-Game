@@ -137,6 +137,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 391775033354987871}
+  - component: {fileID: -2100728414365664573}
   - component: {fileID: 8718456405532801222}
   - component: {fileID: 7673072676877418931}
   - component: {fileID: 2310408280927805467}
@@ -166,6 +167,24 @@ Transform:
   - {fileID: 41774922685390059}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 150, z: 0}
+--- !u!114 &-2100728414365664573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6336622660393287550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e0d2c84431b0942932ea56738b2639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DropOrbsOnDeath
+  dropChance: 0.25
+  healthPickup: {fileID: 9181176699362758715, guid: 547ef026d8576844f9287af744958fcd, type: 3}
+  manaPickup: {fileID: 3093340706528911704, guid: a468edaae5d02394b879ab90d280af6a, type: 3}
+  doubleDmgPickup: {fileID: 4795615329670273777, guid: 3489854c64e534c448206908d237e25d, type: 3}
+  spawnHeight: 0.4
+  scatter: 0.3
 --- !u!114 &8718456405532801222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,6 +223,14 @@ MonoBehaviour:
   sightRange: 20
   attackRange: 13
   timeBetweenAttacks: 1.5
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  visionBlockers:
+    serializedVersion: 2
+    m_Bits: 1
+  eyeRadius: 0.12
+  investigateTime: 3
   walkPointRange: 8
   whatIsGround:
     serializedVersion: 2
@@ -248,7 +275,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6336622660393287550}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5

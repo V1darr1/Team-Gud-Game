@@ -195,6 +195,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5138128267656528082}
+  - component: {fileID: -1140388410718247036}
   - component: {fileID: 8673746140320868096}
   - component: {fileID: 623090955753136442}
   - component: {fileID: 5368378755852368894}
@@ -228,6 +229,27 @@ Transform:
   - {fileID: 6763768506712785352}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 170.001, z: 0}
+--- !u!114 &-1140388410718247036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664744587384592746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31e0d2c84431b0942932ea56738b2639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DropOrbsOnDeath
+  dropChance: 0.25
+  healthPickup: {fileID: 9181176699362758715, guid: 547ef026d8576844f9287af744958fcd, type: 3}
+  manaPickup: {fileID: 3093340706528911704, guid: a468edaae5d02394b879ab90d280af6a, type: 3}
+  doubleDmgPickup: {fileID: 4795615329670273777, guid: 3489854c64e534c448206908d237e25d, type: 3}
+  healthChance: 0.25
+  manaChance: 0.25
+  doubleChance: 0.15
+  spawnHeight: 0.4
+  scatter: 0.3
 --- !u!95 &8673746140320868096
 Animator:
   serializedVersion: 7
@@ -238,7 +260,7 @@ Animator:
   m_GameObject: {fileID: 664744587384592746}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 41f081d5c6d286c47a33bed3f84de79a, type: 3}
-  m_Controller: {fileID: 9100000, guid: 69ce5dd747afb75488c00ed0f554f1d6, type: 2}
+  m_Controller: {fileID: 9100000, guid: fd2f8bf230c80fc4d9774e9109997277, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -283,11 +305,19 @@ MonoBehaviour:
   headPos: {fileID: 7682806386751278538}
   animator: {fileID: 8673746140320868096}
   health: {fileID: 623090955753136442}
-  faceTargetSpeed: 15
+  faceTargetSpeed: 20
   FOV: 180
   sightRange: 20
   attackRange: 2.2
   timeBetweenAttacks: 0.75
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  visionBlockers:
+    serializedVersion: 2
+    m_Bits: 1
+  eyeRadius: 0.12
+  investigateTime: 3
   walkPointRange: 8
   whatIsGround:
     serializedVersion: 2
@@ -303,6 +333,10 @@ MonoBehaviour:
   meleeHitRadius: 0.9
   castPoint: {fileID: 0}
   primarySpell: {fileID: 0}
+  stuckCheckInterval: 0.25
+  stuckIfSpeedBelow: 0.05
+  stuckForSeconds: 0.8
+  sideStepDistance: 1.2
 --- !u!136 &4547047454567192633
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -354,7 +388,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 664744587384592746}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
@@ -892,14 +926,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3630833736105133055}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7419447, y: -0.48406753, z: -0.3885167, w: 0.25347883}
-  m_LocalPosition: {x: -0.035, y: 0.1, z: -0.012}
+  m_LocalRotation: {x: 0.6986402, y: -0.6504517, z: -0.2604295, w: 0.14488243}
+  m_LocalPosition: {x: 0.005465074, y: 0.0975639, z: 0.004160553}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6253314293851176972}
   m_Father: {fileID: 8307356704389197124}
-  m_LocalEulerAnglesHint: {x: 0, y: -124.723, z: -113.757}
+  m_LocalEulerAnglesHint: {x: -7.837, y: -146.111, z: -96.482}
 --- !u!33 &1331379462671432154
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1549,13 +1583,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8517817732898416758}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.046147276, y: -0.10021751, z: -0.41570756, w: 0.90278137}
-  m_LocalPosition: {x: 0.122, y: 0.203, z: -0.004}
+  m_LocalRotation: {x: -0.5228138, y: 0.55477, z: -0.42966127, w: 0.4840323}
+  m_LocalPosition: {x: -0.029, y: -0.02, z: -0.063}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8713730386862120886}
-  m_LocalEulerAnglesHint: {x: -9.593, y: -8.314, z: -48.751}
+  m_LocalEulerAnglesHint: {x: -1.684, y: 99.339, z: -85.173}
 --- !u!33 &4768686625728313939
 MeshFilter:
   m_ObjectHideFlags: 0

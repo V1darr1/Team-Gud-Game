@@ -23,6 +23,12 @@ public class SimpleProjectile : MonoBehaviour
     /// Called by the caster immediately after Instantiate().
     /// Sets the damage and the forward direction.
     /// </summary>
+
+    private void Start()
+    {
+        if (lifetime > 0f) Destroy(gameObject, lifetime);
+    }
+
     public void Init(float damage, Vector3 direction)
     {
         _damage = damage;
@@ -39,9 +45,6 @@ public class SimpleProjectile : MonoBehaviour
 
         // Move forward in the direction we're facing.
         transform.position += transform.forward * speed * Time.deltaTime;
-
-        // Count down lifetime and destroy when time runs out (prevents infinite objects).
-        Destroy(gameObject, lifetime);
     }
 
     /// <summary>
@@ -50,16 +53,27 @@ public class SimpleProjectile : MonoBehaviour
     /// </summary>
     private void OnTriggerEnter(Collider other)
     {
-        if (other.isTrigger) return; // Exit if Trigger
+        if (other.isTrigger) return; // ignore triggers
 
-        Debug.Log(other.name);
-        iDamageable dmg = other.GetComponent<iDamageable>();
-        if (dmg != null && dmg.IsAlive) { dmg.ApplyDamage(_damage);} //Debug name to Log / Apply Damage
+        // Try to damage
+        var dmg = other.GetComponent<iDamageable>();
+        if (dmg != null && dmg.IsAlive)
+        {
+            // Apply direct hit damage
+            dmg.ApplyDamage(_damage);
+
+            // AOE blast around the impact point (one call only)
+            Vector3 hitPos = other.ClosestPoint(transform.position);
+            if (hitPos == Vector3.zero) hitPos = other.transform.position;
+            PlayerEffects.Instance?.OnPlayerHitEnemy(hitPos);
+        }
+
+        // Destroy either way after contact (so you don't pass through)
         Destroy(gameObject);
-
-
     }
- 
+
+
+
 
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
