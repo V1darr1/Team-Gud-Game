@@ -13,7 +13,7 @@ public class Pickup : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         var playerRoot = other.transform.root;
-
+        
         if (!playerRoot.CompareTag("Player")) return;
 
         bool consumed = false;
@@ -32,7 +32,7 @@ public class Pickup : MonoBehaviour
 
             case PickupType.Mana:
                 var pc = playerRoot.GetComponentInChildren<PlayerController>();
-                if (pc != null)
+                if(pc != null)
                 {
                     float before = pc.CurrentMana;
                     pc.AddMana(amount);

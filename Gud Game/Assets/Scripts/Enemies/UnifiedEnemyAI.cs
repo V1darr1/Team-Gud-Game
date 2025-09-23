@@ -59,31 +59,6 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
     private bool walkPointSet;
     private bool _didPostBakeSnap;
 
-    // --- Unstuck ---
-    [SerializeField] private float stuckCheckInterval = 0.25f;
-    [SerializeField] private float stuckIfSpeedBelow = 0.05f;
-    [SerializeField] private float stuckForSeconds = 0.8f;
-    [SerializeField] private float sideStepDistance = 1.2f;
-
-    float _stillTimer;
-    Vector3 _lastPos;
-
-    bool EnsureAgentOnNavMesh()
-    {
-        if (!agent || !agent.isActiveAndEnabled) return false;
-
-        if (agent.isOnNavMesh) return true;
-
-        // Try to snap to the nearest valid point under/near us
-        if (NavMesh.SamplePosition(transform.position, out var hit, 3f, agent.areaMask))
-        {
-            agent.Warp(hit.position);        // Warp does not require being on-navmesh beforehand
-            return agent.isOnNavMesh;
-        }
-
-        return false; // nowhere valid nearby yet
-    }
-
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -96,28 +71,7 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
             colorOrig = _cachedMat.color;
         }
 
-        if (agent)
-        {
-            agent.updateRotation = false;
-            agent.autoRepath = true;
-            agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
-            agent.stoppingDistance = Mathf.Max(agent.stoppingDistance, 0.6f);
-
-            // ensure we’re actually placed on the NavMesh after the room finishes baking
-            StartCoroutine(SnapAgentNextFrame());
-        }
-        else
-        {
-            Debug.LogWarning($"{name}: NavMeshAgent missing.", this);
-        }
-
-        InvokeRepeating(nameof(CheckStuck), stuckCheckInterval, stuckCheckInterval);
-    }
-
-    void OnEnable()
-    {
-        // if this enemy is enabled after a room transition, snap again next frame
-        if (agent && agent.enabled) StartCoroutine(SnapAgentNextFrame());
+        if (agent) agent.updateRotation = false;
     }
 
     private IEnumerator SnapAgentNextFrame()
@@ -136,8 +90,6 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
 
     void Update()
     {
-        if (!EnsureAgentOnNavMesh()) return;
-        
         // Let DamageableHealth own alive/dead state
         if (health && !health.IsAlive) { HandleDeath(); return; }
 
@@ -202,8 +154,7 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
     // --------- Locomotion ---------
     void Patrolling()
     {
-        if (!agent || !EnsureAgentOnNavMesh()) return;
-
+        if (!agent) return;
 
         if (!walkPointSet) SearchWalkPoint();
         if (walkPointSet) agent.SetDestination(walkPoint);
@@ -222,47 +173,36 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
 
     void SearchWalkPoint()
     {
-        // pick a random direction on XZ plane
-        Vector2 r = Random.insideUnitCircle * walkPointRange;
-        Vector3 candidate = new Vector3(transform.position.x + r.x, transform.position.y, transform.position.z + r.y);
+        float rx = Random.Range(-walkPointRange, walkPointRange);
+        float rz = Random.Range(-walkPointRange, walkPointRange);
+        Vector3 candidate = new Vector3(transform.position.x + rx, transform.position.y + 2f, transform.position.z + rz);
 
-        // snap to the NavMesh near the candidate
-        if (NavMesh.SamplePosition(candidate, out var hit, 2.0f, agent ? agent.areaMask : NavMesh.AllAreas))
+        if (Physics.Raycast(candidate, Vector3.down, out RaycastHit hit, 4f, whatIsGround))
         {
-            walkPoint = hit.position;
+            walkPoint = hit.point;
             walkPointSet = true;
-            return;
         }
-
-        walkPointSet = false;
     }
 
     void ChasePlayer()
     {
-        if (!agent || !EnsureAgentOnNavMesh()) return;
-
+        if (!agent) return;
         var player = gameManager.instance.player;
         if (!player) return;
 
-        // aim a point a bit before the player, so we don't try to overlap them or walls behind them
-        Vector3 toPlayer = player.transform.position - transform.position;
-        Vector3 desired = player.transform.position - toPlayer.normalized * Mathf.Max(agent.stoppingDistance, 0.6f);
-
-        // sample on the mesh
-        if (NavMesh.SamplePosition(desired, out var hit, 1.5f, agent.areaMask))
-            agent.SetDestination(hit.position);
-        else if (NavMesh.SamplePosition(player.transform.position, out hit, 1.5f, agent.areaMask))
+        // Sample near the player to avoid invalid destinations on edges
+        if (UnityEngine.AI.NavMesh.SamplePosition(player.transform.position, out var hit, 1.0f, agent.areaMask))
             agent.SetDestination(hit.position);
         else
-            agent.ResetPath();
+            agent.SetDestination(player.transform.position);
 
         agent.isStopped = false;
 
         if (behavior == BehaviorType.Melee) FaceTargetHard();
         else FaceMoveDirection();
 
-        // if the path is partial/invalid for long, fall back to a patrol point
-        if (!agent.hasPath || agent.pathStatus != NavMeshPathStatus.PathComplete)
+        // If path is invalid or partial for too long, pick a nearby patrol point to unstick
+        if (!agent.hasPath || agent.pathStatus == NavMeshPathStatus.PathInvalid)
         {
             SearchWalkPoint();
             if (walkPointSet) agent.SetDestination(walkPoint);
@@ -290,10 +230,7 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
     // --------- Attack ---------
     void AttackPlayer()
     {
-        if (!agent || !EnsureAgentOnNavMesh()) return;
-
-        agent.isStopped = true;
-
+        if (!agent) return;
         agent.SetDestination(transform.position); // stop to attack
         FaceTarget();
 
@@ -434,7 +371,7 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
     {
         gameManager.instance.updateGameGoal(-1);
 
-        if (agent && agent.isOnNavMesh)
+        if (agent)
         {
             agent.ResetPath();
             agent.isStopped = true;
@@ -479,85 +416,5 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
             Quaternion.LookRotation(dir),
             Time.deltaTime * faceTargetSpeed
         );
-    }
-
-    void CheckStuck()
-    {
-        if (!agent || !agent.isOnNavMesh) return;
-
-        // should we be moving?
-        bool shouldMove = agent.hasPath && !agent.pathPending && agent.remainingDistance > agent.stoppingDistance;
-
-        float moved = (transform.position - _lastPos).magnitude;
-        _lastPos = transform.position;
-
-        if (!shouldMove) { _stillTimer = 0f; return; }
-
-        if (moved < stuckIfSpeedBelow) _stillTimer += stuckCheckInterval;
-        else _stillTimer = 0f;
-
-        if (_stillTimer < stuckForSeconds) return;
-
-        // --- escape: side-step and re-path ---
-        _stillTimer = 0f;
-        agent.ResetPath();
-
-        Vector3 left = Vector3.Cross(Vector3.up, transform.forward).normalized;
-        Vector3 right = -left;
-
-        if (!TryStep(left) && !TryStep(right))
-            TryStep(Random.insideUnitSphere);
-
-        // after a short delay, try again to the true target (player or patrol)
-        StartCoroutine(RepathSoon());
-    }
-
-    bool TryStep(Vector3 dir)
-    {
-        Vector3 target = transform.position + dir.normalized * sideStepDistance;
-        if (NavMesh.SamplePosition(target, out var hit, 1.5f, agent.areaMask))
-        {
-            agent.SetDestination(hit.position);
-            return true;
-        }
-        return false;
-    }
-
-    // ----HEAD TRACKING----
-    void OnAnimatorIK(int layerIndex)
-    {
-        if (!animator) return;
-
-        var player = gameManager.instance?.player;
-        if (!player) return;
-
-        // Point of interest (you can offset upward a bit to aim at the chest/head)
-        Vector3 targetPos = player.transform.position + Vector3.up * 1.5f;
-
-        // How strongly the enemy looks at the target (blendable)
-        float weight = 1.0f;
-
-        // IK settings
-        animator.SetLookAtWeight(
-            weight,        // global weight
-            0.3f,          // body weight
-            0.6f,          // head weight
-            1.0f,          // eyes weight
-            0.5f           // clamp weight (limits max rotation)
-        );
-
-        // Apply look-at target
-        animator.SetLookAtPosition(targetPos);
-    }
-
-    IEnumerator RepathSoon()
-    {
-        yield return new WaitForSeconds(0.35f);
-
-        var player = gameManager.instance.player;
-        if (player && CanSeePlayer())
-            ChasePlayer();
-        else
-            Patrolling();
     }
 }

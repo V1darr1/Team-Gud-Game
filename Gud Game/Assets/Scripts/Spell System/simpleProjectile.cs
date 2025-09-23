@@ -11,6 +11,9 @@ public class SimpleProjectile : MonoBehaviour
     [Tooltip("How many seconds this projectile lives before auto-destroying.")]
     [SerializeField] private float lifetime = 5f;
 
+    [Header("VFX")]
+    [SerializeField] private GameObject hitVFX;
+
     [Header("Debug/Effects (optional)")]
     [Tooltip("If true, draws a short gizmo ray in Scene view to show forward direction.")]
     [SerializeField] private bool drawGizmoForward = false;
@@ -26,7 +29,8 @@ public class SimpleProjectile : MonoBehaviour
 
     private void Start()
     {
-        if (lifetime > 0f) Destroy(gameObject, lifetime);
+        if (lifetime > 0f) 
+            Destroy(gameObject, lifetime);
     }
 
     public void Init(float damage, Vector3 direction)
@@ -53,27 +57,24 @@ public class SimpleProjectile : MonoBehaviour
     /// </summary>
     private void OnTriggerEnter(Collider other)
     {
-        if (other.isTrigger) return; // ignore triggers
+        if (other.isTrigger) return; // Exit if Trigger
 
-        // Try to damage
         var dmg = other.GetComponent<iDamageable>();
         if (dmg != null && dmg.IsAlive)
-        {
-            // Apply direct hit damage
             dmg.ApplyDamage(_damage);
 
-            // AOE blast around the impact point (one call only)
+        if (hitVFX)
+        {
             Vector3 hitPos = other.ClosestPoint(transform.position);
-            if (hitPos == Vector3.zero) hitPos = other.transform.position;
-            PlayerEffects.Instance?.OnPlayerHitEnemy(hitPos);
+            Vector3 normal = (transform.position - hitPos).normalized;
+            var rot = Quaternion.LookRotation(normal, Vector3.up);
+            var vfx = Instantiate(hitVFX, hitPos, rot);
+            Destroy(vfx, 2f);
         }
 
-        // Destroy either way after contact (so you don't pass through)
         Destroy(gameObject);
     }
-
-
-
+ 
 
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()

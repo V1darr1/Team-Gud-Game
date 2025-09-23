@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Gud Game/Assets/Shokubutsu Studio/Free Low Poly Cubic Humans/Textures/Texture_B.png.meta
-guid: 32c2a4fddf43bfd4a8ba5639b32f3013
-========
-guid: ab71546e343080e41ba096022c06564c
->>>>>>>> enemyAI-JR:Gud Game/Assets/Unity Store DL/StylizedAOEVFXwithIndicators/Textures/Drop.png.meta
+guid: 1cca55d8199a7844984697e1ea9882e0
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -131,16 +127,8 @@ TextureImporter:
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-<<<<<<<< HEAD:Gud Game/Assets/Shokubutsu Studio/Free Low Poly Cubic Humans/Textures/Texture_B.png.meta
   productId: 322530
   packageName: Cubic Characters - Low poly 3D by Shokubutsu
   packageVersion: 1.0
   assetPath: Assets/Shokubutsu Studio/Free Low Poly Cubic Humans/Textures/Texture_B.png
   uploadId: 766413
-========
-  productId: 274300
-  packageName: Stylized AOE VFX with Indicators
-  packageVersion: 1.1.1
-  assetPath: Assets/StylizedAOEVFXwithIndicators/Textures/Drop.png
-  uploadId: 659150
->>>>>>>> enemyAI-JR:Gud Game/Assets/Unity Store DL/StylizedAOEVFXwithIndicators/Textures/Drop.png.meta

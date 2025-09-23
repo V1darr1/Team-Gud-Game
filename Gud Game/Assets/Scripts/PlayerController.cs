@@ -1,6 +1,5 @@
-using System.Collections;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour, iSpellCaster
 {
@@ -24,35 +23,23 @@ public class PlayerController : MonoBehaviour, iSpellCaster
     public bool IsManaFull => _mana >= manaMax;
 
     Vector3 moveDir, playerVel;
-    public bool inputEnabled = true;
-    public void SetInputEnabled(bool v) => inputEnabled = v;
 
     private int jumpCount;
     private bool isSprinting, sprintToggle;
-
-    bool isBursting;
-    float baseSpeed;
-
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         controller = GetComponent<CharacterController>();
         _mana = manaMax;
-        baseSpeed = speed; // remember original speed once
     }
 
     // Update is called once per frame
-
     void Update()
     {
-        if (!inputEnabled) return;
         movement();
         sprint();
-
-        if (Input.GetButtonDown("Fire1"))
-            castSpell();
-
+        
         //Cooldown Timer ticks towards 0
         if (_cooldownTimer > 0f)
             _cooldownTimer -= Time.deltaTime;
@@ -64,6 +51,7 @@ public class PlayerController : MonoBehaviour, iSpellCaster
 
     void movement()
     {
+
         if (controller.isGrounded)
         {
             jumpCount = 0;
@@ -74,33 +62,20 @@ public class PlayerController : MonoBehaviour, iSpellCaster
             playerVel.y -= gravity * Time.deltaTime;
         }
 
-        
-        Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+        moveDir = (Input.GetAxis("Horizontal") * transform.right) + (Input.GetAxis("Vertical") * transform.forward);
 
-        
-        if (input.sqrMagnitude > 1f) input.Normalize();
-
-        
-        moveDir = (transform.right * input.x) + (transform.forward * input.z);
-
-        
-        float sprintMult = isSprinting ? sprintMod : 1f;
-
-        var upgrades = GetComponent<PlayerUpgrades>();
-        float upgradeMult = upgrades ? (1f + Mathf.Clamp(upgrades.speedPercentBonus, -0.9f, 10f)) : 1f;
-
-        
-        float finalSpeed = Mathf.Clamp(baseSpeed * sprintMult * upgradeMult, 0f, 20f); // cap to avoid runaway
-
-        
-        controller.Move(moveDir * finalSpeed * Time.deltaTime);
+        controller.Move(moveDir * speed * Time.deltaTime);
 
         jump();
+
         controller.Move(playerVel * Time.deltaTime);
+
+        if (Input.GetButtonDown("Fire1"))
+        {
+            castSpell();
+        }
+
     }
-
-
-
 
     void jump()
     {
@@ -113,78 +88,35 @@ public class PlayerController : MonoBehaviour, iSpellCaster
 
     void sprint()
     {
-        isSprinting = Input.GetButton("Sprint");
+        if (Input.GetButtonDown("Sprint"))
+        {
+            speed *= sprintMod;
+            isSprinting = true;
+        }
+        else if (Input.GetButtonUp("Sprint") && !sprintToggle)
+        {
+            speed /= sprintMod;
+            isSprinting = false;
+        }
+        else if (isSprinting && Input.GetButtonDown("Sprint"))
+        {
+            speed /= sprintMod;
+            isSprinting = false;
+
+        }
     }
-
-
     void castSpell()
     {
+        if (primarySpell == null) return;          // No spell equipped
+        if (!CanCast(primarySpell)) return;        // Not ready (mana/cooldown)
 
-        if (primarySpell == null) return;
-        if (!CanCast(primarySpell)) return;
-
-        var upgrades = GetComponent<PlayerUpgrades>();
-
+        // Get origin (camera position) and forward direction (where we're looking)
         Vector3 origin = Camera.main.transform.position;
         Vector3 direction = Camera.main.transform.forward;
 
-        if (upgrades != null && upgrades.tripleBurstEnabled)
-        {
-            ConeCast(primarySpell, origin, direction, upgrades);
-        }
-        else
-        {
-            BeginCast(primarySpell, origin, direction);
-        }
+        // Actually begin the cast
+        BeginCast(primarySpell, origin, direction);
     }
-
-    // Fires 3 projectiles in a cone, but spends mana/cooldown ONLY ONCE.
-    void ConeCast(SpellData spell, Vector3 origin, Vector3 direction, PlayerUpgrades upgrades)
-    {
-        // Spend resources once
-        _mana -= spell.ManaCost;
-        _cooldownTimer = spell.Cooldown;
-
-        var yawAxis = Camera.main ? Camera.main.transform.up : Vector3.up;
-
-        float half = Mathf.Abs(upgrades.coneTotalAngle) * 0.5f;
-
-        // Center shot
-        SpawnProjectileNoCost(spell, origin, direction);
-
-        // Left / Right shots at ±half the cone angle
-        Quaternion leftRot = Quaternion.AngleAxis(-half, yawAxis);
-        Quaternion rightRot = Quaternion.AngleAxis(+half, yawAxis);
-        SpawnProjectileNoCost(spell, origin, leftRot * direction);
-        SpawnProjectileNoCost(spell, origin, rightRot * direction);
-    }
-
-    // Clone BeginCast projectile spawn without spending mana/cooldown.
-    void SpawnProjectileNoCost(SpellData spell, Vector3 origin, Vector3 direction)
-    {
-        if (spell.ProjectilePrefab == null)
-        {
-            Debug.LogWarning($"Spell '{spell.Id}' has no projectile prefab assigned.");
-            return;
-        }
-
-        Vector3 spawnPos = origin + direction;
-        GameObject projGO = Instantiate(spell.ProjectilePrefab, spawnPos, Quaternion.LookRotation(direction));
-
-        var projectile = projGO.GetComponent<SimpleProjectile>();
-        if (projectile != null)
-        {
-            projectile.Init(damage: spell.Damage, direction: direction);
-        }
-        else
-        {
-            Debug.LogWarning("Spawned projectile is missing SimpleProjectile component.");
-        }
-    }
-
-
-
-
 
     // This code for working mana pickups
     public void AddMana(float amount)
@@ -251,7 +183,6 @@ public class PlayerController : MonoBehaviour, iSpellCaster
         }
     }
 
-
    /* IEnumerator flashDamage()
     {
         gameManager.instance.playerDamageFlash.SetActive(true);
@@ -264,5 +195,4 @@ public class PlayerController : MonoBehaviour, iSpellCaster
     public float CurrentMana => _mana;
     public float MaxMana => manaMax;
     public float CooldownRemaining => Mathf.Max(0f, _cooldownTimer);
-
 }
