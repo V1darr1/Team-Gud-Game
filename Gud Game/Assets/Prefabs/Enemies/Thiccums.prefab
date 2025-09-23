@@ -231,6 +231,10 @@ MonoBehaviour:
   meleeHitRadius: 1.5
   castPoint: {fileID: 0}
   primarySpell: {fileID: 0}
+  stuckCheckInterval: 0.25
+  stuckIfSpeedBelow: 0.05
+  stuckForSeconds: 0.8
+  sideStepDistance: 1.2
 --- !u!195 &4844424275946444388
 NavMeshAgent:
   m_ObjectHideFlags: 0

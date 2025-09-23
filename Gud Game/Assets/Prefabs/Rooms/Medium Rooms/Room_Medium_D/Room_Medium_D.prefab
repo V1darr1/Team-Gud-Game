@@ -2655,6 +2655,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy_Wizard (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 7673072676877418931, guid: a39d520c689983f45bd6f83093d12dc5, type: 3}
+      propertyPath: walkPointRange
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5685,6 +5689,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy_Wizard (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 7673072676877418931, guid: a39d520c689983f45bd6f83093d12dc5, type: 3}
+      propertyPath: walkPointRange
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6254,6 +6262,10 @@ PrefabInstance:
     - target: {fileID: 6336622660393287550, guid: a39d520c689983f45bd6f83093d12dc5, type: 3}
       propertyPath: m_Name
       value: Enemy_Wizard (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7673072676877418931, guid: a39d520c689983f45bd6f83093d12dc5, type: 3}
+      propertyPath: walkPointRange
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12248,6 +12260,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy_Wizard (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 7673072676877418931, guid: a39d520c689983f45bd6f83093d12dc5, type: 3}
+      propertyPath: walkPointRange
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12802,6 +12818,10 @@ PrefabInstance:
     - target: {fileID: 6336622660393287550, guid: a39d520c689983f45bd6f83093d12dc5, type: 3}
       propertyPath: m_Name
       value: Enemy_Wizard (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7673072676877418931, guid: a39d520c689983f45bd6f83093d12dc5, type: 3}
+      propertyPath: walkPointRange
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14126,6 +14146,10 @@ PrefabInstance:
     - target: {fileID: 6336622660393287550, guid: a39d520c689983f45bd6f83093d12dc5, type: 3}
       propertyPath: m_Name
       value: Enemy_Wizard
+      objectReference: {fileID: 0}
+    - target: {fileID: 7673072676877418931, guid: a39d520c689983f45bd6f83093d12dc5, type: 3}
+      propertyPath: walkPointRange
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
