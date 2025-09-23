@@ -394,6 +394,7 @@ MonoBehaviour:
   - {fileID: 7671353415609839142}
   - {fileID: 2309449347636532618}
   - {fileID: 2842597639305641569}
+  countIfEmptyAtStart: 1
 --- !u!1 &4364110283211660365
 GameObject:
   m_ObjectHideFlags: 0
