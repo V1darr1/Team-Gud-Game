@@ -428,7 +428,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6776281753082686767, guid: 0f215b1dacaef834d99413ad1e76dfc7, type: 3}
       propertyPath: speed
-      value: 1
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6776281753082686767, guid: 0f215b1dacaef834d99413ad1e76dfc7, type: 3}
+      propertyPath: jumpSpeed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6776281753082686767, guid: 0f215b1dacaef834d99413ad1e76dfc7, type: 3}
+      propertyPath: sprintMod
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6776281753082686767, guid: 0f215b1dacaef834d99413ad1e76dfc7, type: 3}
       propertyPath: inputEnabled
@@ -1472,7 +1480,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d28d67e6419b0924cb273ef887274358, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerUpgrades
-  speedPercentBonus: 15
+  speedPercentBonus: 0
+  speedPercentCap: 0.8
   tripleBurstEnabled: 0
   burstCount: 3
   burstInterval: 0.08

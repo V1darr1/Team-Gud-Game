@@ -105,9 +105,10 @@ public class RewardEveryNRooms : MonoBehaviour
                 break;
 
             case RewardItem.RewardType.SpeedPercent:
-                upgrades.AddSpeedPercent(r.value);
-                Debug.Log($"[Rewards] Applied Speed +{r.value}%");
+                upgrades.AddSpeedPercent(r.value); 
+                Debug.Log($"[Rewards] Applied Speed +{r.value}% -> total={upgrades.speedPercentBonus:P0}");
                 break;
+
         }
     }
 
