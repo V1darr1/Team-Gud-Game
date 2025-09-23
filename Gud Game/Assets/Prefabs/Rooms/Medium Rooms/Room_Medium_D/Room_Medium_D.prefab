@@ -432,7 +432,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 793264c8bd9b31642b280bfc36ba0808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleDOT
-  damagePerSecond: 15
+  damagePerSecond: 30
   onlyAffectTag: Player
   requireTagMatch: 1
 --- !u!33 &5260239110923911921
