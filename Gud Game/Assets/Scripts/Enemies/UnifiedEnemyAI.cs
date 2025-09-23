@@ -561,4 +561,7 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
         else
             Patrolling();
     }
+    public float Damage  // public accessor for scaling
+    { get => damage;
+    set => damage = value; }
 }

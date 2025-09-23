@@ -195,6 +195,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5138128267656528082}
+  - component: {fileID: 1350988499040573226}
   - component: {fileID: -1140388410718247036}
   - component: {fileID: 8673746140320868096}
   - component: {fileID: 623090955753136442}
@@ -229,6 +230,20 @@ Transform:
   - {fileID: 6763768506712785352}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 170.001, z: 0}
+--- !u!114 &1350988499040573226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664744587384592746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8f55194e8ed4b14d984da039a75e61a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DifficultyScaler
+  healthPerLevel: 10
+  damagePerLevel: 2
 --- !u!114 &-1140388410718247036
 MonoBehaviour:
   m_ObjectHideFlags: 0

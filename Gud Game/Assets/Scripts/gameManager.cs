@@ -229,7 +229,7 @@ public class gameManager : MonoBehaviour
     {
         SetRoomsCompleted(roomsCompleted + 1);
     }
-
+    public int CurrentLevel => Mathf.Max(1, roomsClearedThisRun + 1);
     public void DecrementEnemyCount() => SetEnemiesRemaining(enemiesRemaining - 1);
     public void IncrementEnemyCount() => SetEnemiesRemaining(enemiesRemaining + 1);
 
