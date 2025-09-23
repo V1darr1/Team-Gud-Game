@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour, iSpellCaster
 
     bool isBursting;
     float baseSpeed;
+    float maxSpeedCap = 0f;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -67,7 +68,7 @@ public class PlayerController : MonoBehaviour, iSpellCaster
         if (controller.isGrounded)
         {
             jumpCount = 0;
-            playerVel.y = 0;
+            playerVel.y = 0f;
         }
         else
         {
@@ -75,29 +76,39 @@ public class PlayerController : MonoBehaviour, iSpellCaster
         }
 
         
-        Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+        float ix = Input.GetAxis("Horizontal");
+        float iz = Input.GetAxis("Vertical");
 
         
+        const float deadzone = 0.2f;
+        if (Mathf.Abs(ix) < deadzone) ix = 0f;
+        if (Mathf.Abs(iz) < deadzone) iz = 0f;
+
+        
+        Vector3 input = new Vector3(ix, 0f, iz);
         if (input.sqrMagnitude > 1f) input.Normalize();
 
         
         moveDir = (transform.right * input.x) + (transform.forward * input.z);
 
-        
+       
         float sprintMult = isSprinting ? sprintMod : 1f;
 
         var upgrades = GetComponent<PlayerUpgrades>();
-        float upgradeMult = upgrades ? (1f + Mathf.Clamp(upgrades.speedPercentBonus, -0.9f, 10f)) : 1f;
+        float upgradeMult = upgrades ? (1f + upgrades.speedPercentBonus) : 1f;
 
         
-        float finalSpeed = Mathf.Clamp(baseSpeed * sprintMult * upgradeMult, 0f, 20f); // cap to avoid runaway
+        float finalSpeed = baseSpeed * sprintMult * upgradeMult;
 
         
+        if (maxSpeedCap > 0f) finalSpeed = Mathf.Min(finalSpeed, maxSpeedCap);
+
+       
         controller.Move(moveDir * finalSpeed * Time.deltaTime);
-
         jump();
         controller.Move(playerVel * Time.deltaTime);
     }
+
 
 
 
