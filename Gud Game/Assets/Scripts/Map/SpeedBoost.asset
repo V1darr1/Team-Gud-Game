@@ -16,4 +16,4 @@ MonoBehaviour:
   description: Move 15% faster
   icon: {fileID: 0}
   rewardType: 2
-  value: 60
+  value: 15

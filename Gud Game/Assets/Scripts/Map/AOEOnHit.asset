@@ -16,4 +16,4 @@ MonoBehaviour:
   description: Your hits explode for small AOE
   icon: {fileID: 0}
   rewardType: 1
-  value: 1
+  value: 10
