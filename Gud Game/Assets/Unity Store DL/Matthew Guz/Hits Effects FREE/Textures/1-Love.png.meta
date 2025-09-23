@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Gud Game/Assets/Unity Store DL/Matthew Guz/Hits Effects FREE/Textures/1-Love.png.meta
 guid: e239c95dc10c80d408f5972feab4941b
+========
+guid: 6ecf29727648a384bb28631e9fff122f
+>>>>>>>> enemyAI-JR:Gud Game/Assets/Unity Store DL/StylizedAOEVFXwithIndicators/Textures/Indicator.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -37,9 +41,15 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
+<<<<<<<< HEAD:Gud Game/Assets/Unity Store DL/Matthew Guz/Hits Effects FREE/Textures/1-Love.png.meta
     wrapU: 0
     wrapV: 0
     wrapW: 0
+========
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+>>>>>>>> enemyAI-JR:Gud Game/Assets/Unity Store DL/StylizedAOEVFXwithIndicators/Textures/Indicator.png.meta
   nPOTScale: 1
   lightmap: 0
   compressionQuality: 50
@@ -78,6 +88,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     ignorePlatformSupport: 0
+<<<<<<<< HEAD:Gud Game/Assets/Unity Store DL/Matthew Guz/Hits Effects FREE/Textures/1-Love.png.meta
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -91,6 +102,8 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     ignorePlatformSupport: 0
+========
+>>>>>>>> enemyAI-JR:Gud Game/Assets/Unity Store DL/StylizedAOEVFXwithIndicators/Textures/Indicator.png.meta
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -107,7 +120,11 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
+<<<<<<<< HEAD:Gud Game/Assets/Unity Store DL/Matthew Guz/Hits Effects FREE/Textures/1-Love.png.meta
     buildTarget: iPhone
+========
+    buildTarget: Server
+>>>>>>>> enemyAI-JR:Gud Game/Assets/Unity Store DL/StylizedAOEVFXwithIndicators/Textures/Indicator.png.meta
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -117,6 +134,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     ignorePlatformSupport: 0
+<<<<<<<< HEAD:Gud Game/Assets/Unity Store DL/Matthew Guz/Hits Effects FREE/Textures/1-Love.png.meta
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -143,6 +161,8 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     ignorePlatformSupport: 0
+========
+>>>>>>>> enemyAI-JR:Gud Game/Assets/Unity Store DL/StylizedAOEVFXwithIndicators/Textures/Indicator.png.meta
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
@@ -166,8 +186,16 @@ TextureImporter:
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
+<<<<<<<< HEAD:Gud Game/Assets/Unity Store DL/Matthew Guz/Hits Effects FREE/Textures/1-Love.png.meta
   productId: 284613
   packageName: Hit Effects FREE
   packageVersion: 1.2.0
   assetPath: Assets/Matthew Guz/Hits Effects FREE/Textures/1-Love.png
   uploadId: 760327
+========
+  productId: 274300
+  packageName: Stylized AOE VFX with Indicators
+  packageVersion: 1.1.1
+  assetPath: Assets/StylizedAOEVFXwithIndicators/Textures/Indicator.png
+  uploadId: 659150
+>>>>>>>> enemyAI-JR:Gud Game/Assets/Unity Store DL/StylizedAOEVFXwithIndicators/Textures/Indicator.png.meta

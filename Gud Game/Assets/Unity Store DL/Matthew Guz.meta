@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Gud Game/Assets/Unity Store DL/Matthew Guz.meta
 guid: 503c3f9bba66cab4fa8dc2742c25572d
+========
+guid: 3fa98d1c74917bf498812f3d577ee6fb
+>>>>>>>> enemyAI-JR:Gud Game/Assets/Unity Store DL/StylizedAOEVFXwithIndicators/Meshes.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Gud Game/Assets/Scripts/Unused.meta
 guid: fd91b0db8aad0e541add82ba654c3bd2
+========
+guid: 94f30e5fcd885024499812c4424596b5
+>>>>>>>> enemyAI-JR:Gud Game/Assets/Unity Store DL/StylizedAOEVFXwithIndicators.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
