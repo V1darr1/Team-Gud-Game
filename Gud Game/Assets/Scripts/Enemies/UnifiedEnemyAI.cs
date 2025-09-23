@@ -45,6 +45,7 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
     [SerializeField] private float meleeHitRadius = 0.9f;  // bump up for big enemy (CHUNK!!)
     private readonly Collider[] _hits = new Collider[6];
     private bool weaponActive;
+   
 
     // ---------- Mage ----------
     [Header("Mage (Behavior = Mage)")]
@@ -312,7 +313,7 @@ public class UnifiedEnemyAI : MonoBehaviour, iEnemy
 
         Invoke(nameof(ResetAttack), timeBetweenAttacks);
     }
-
+   
     void ResetAttack() => alreadyAttacked = false;
 
     // --- Melee ---
