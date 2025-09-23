@@ -1,18 +1,17 @@
-using Unity.VisualScripting;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro;
 
 public class gameManager : MonoBehaviour
 {
     public static gameManager instance;
 
-    private static bool bootToMainMenu = true;
+    public static bool bootToMainMenu = true;
 
     // References to your menu UI panels
     [SerializeField] GameObject menuMain;
-    [SerializeField] GameObject menuPause;
+    public GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject settingsMenu;
@@ -21,7 +20,7 @@ public class gameManager : MonoBehaviour
     [SerializeField] TMP_Text roomsCompletedText;
 
     [HideInInspector] public GameObject menuActive;
-   
+
     public Image playerHPBar;
     public Image playerMPBar;
     public GameObject playerDamageFlash;
@@ -73,7 +72,7 @@ public class gameManager : MonoBehaviour
         if (menuWin != null) menuWin.SetActive(false);
         if (menuLose != null) menuLose.SetActive(false);
 
-        if(bootToMainMenu)
+        if (bootToMainMenu)
         {
             if (menuMain) menuMain.SetActive(true);
             menuActive = menuMain;
@@ -97,7 +96,7 @@ public class gameManager : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("Cancel"))
         {
             if (menuActive == null) PauseGame(menuPause);
             else if (menuActive == menuPause) UnpauseGame();
@@ -109,7 +108,7 @@ public class gameManager : MonoBehaviour
     {
         isPaused = true;
 
-        if(menuActive) menuActive.SetActive(false);
+        if (menuActive) menuActive.SetActive(false);
 
         menuActive = menu;
         if (menuActive) menuActive.SetActive(true);
@@ -121,6 +120,7 @@ public class gameManager : MonoBehaviour
 
     public void UnpauseGame()
     {
+        Debug.Log("Game is unpausing.");
         isPaused = false;
 
         if (menuActive) menuActive.SetActive(false);
@@ -130,23 +130,14 @@ public class gameManager : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
-   
     public void ReturnToMainMenu()
     {
-        bootToMainMenu = true;
-        Time.timeScale = 1f;
-        isPaused = false;
-        menuActive = null;
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+        SceneManager.LoadScene("Levels/Main Menu");
     }
 
     public void OnNewGame()
     {
-        var scene = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(scene);
+        SceneManager.LoadScene("Levels/Playable Map");
     }
 
     public void ReturnToPauseMenu(GameObject menu)
@@ -178,10 +169,10 @@ public class gameManager : MonoBehaviour
     }
     void HealthAndMana()
     {
-       
-        
-           playerHPBar.fillAmount = (playerDamageableHealth.CurrentHealth / playerDamageableHealth.MaxHealth);
-          playerMPBar.fillAmount = (playerController.CurrentMana / playerController.MaxMana);
+
+
+        playerHPBar.fillAmount = (playerDamageableHealth.CurrentHealth / playerDamageableHealth.MaxHealth);
+        playerMPBar.fillAmount = (playerController.CurrentMana / playerController.MaxMana);
     }
 
     public void SetEnemiesRemaining(int value)

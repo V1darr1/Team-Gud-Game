@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class buttonFunctions : MonoBehaviour
 {
@@ -7,7 +8,10 @@ public class buttonFunctions : MonoBehaviour
 
     public void startGame()
     {
-        gameManager.instance.UnpauseGame();
+        gameManager.bootToMainMenu = false;
+
+
+        SceneManager.LoadScene("Levels/Presentation Map");
     }
 
     public void resume()
@@ -17,7 +21,10 @@ public class buttonFunctions : MonoBehaviour
 
     public void returnToMainMenu()
     {
+        Debug.Log("Button Clicked! Attempting To Return To MAinMenu");
         gameManager.instance.ReturnToMainMenu();
+
+        SceneManager.LoadScene("Levels/Main Menu");
     }
 
     public void openSettingsMenu()
@@ -27,7 +34,7 @@ public class buttonFunctions : MonoBehaviour
 
     public void InvertYOn()
     {
-        if(cameraController != null) cameraController.SetInvertY(true);
+        if (cameraController != null) cameraController.SetInvertY(true);
     }
 
     public void InvertYOff()
@@ -47,7 +54,10 @@ public class buttonFunctions : MonoBehaviour
         // wait a second or two so rooms reset & player gets placed
         yield return new WaitForSeconds(1.5f);
 
+        SceneManager.LoadScene("Levels/Playable Map");
+
         gameManager.instance.UnpauseGame();
+
     }
 
     public void quit()
@@ -58,4 +68,18 @@ public class buttonFunctions : MonoBehaviour
         Application.Quit();
 #endif
     }
+    public void LoadMainMenuAdditively()
+    {
+        // This pauses the game and loads the main menu on top
+        gameManager.instance.PauseGame(gameManager.instance.menuPause);
+        SceneManager.LoadScene("Levels/Main Menu", LoadSceneMode.Additive);
+    }
+
+    public void UnloadMainMenu()
+    {
+        // This unloads the main menu and unpauses the game
+        SceneManager.UnloadSceneAsync("Levels/MainMenu");
+        gameManager.instance.UnpauseGame();
+    }
+
 }
