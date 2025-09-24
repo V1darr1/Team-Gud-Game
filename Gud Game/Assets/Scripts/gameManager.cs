@@ -161,6 +161,7 @@ public class gameManager : MonoBehaviour
         Cursor.visible = true;
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+        MusicManager.Instance.PlayMusic("MainMenu");
     }
 
     public void OnNewGame()
