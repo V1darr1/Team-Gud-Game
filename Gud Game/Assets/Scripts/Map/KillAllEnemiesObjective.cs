@@ -59,7 +59,6 @@ public class KillAllEnemiesObjective : MonoBehaviour, IRoomObjective
         IsComplete = true;
         Debug.Log("[Objective] COMPLETE", this);
         if (gameManager.instance) gameManager.instance.SetEnemiesRemaining(0);
-        if (gameManager.instance) gameManager.instance.NotifyRoomCleared();
         OnCompleted?.Invoke(this);
     }
 }
