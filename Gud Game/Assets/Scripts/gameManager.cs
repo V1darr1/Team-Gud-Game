@@ -141,7 +141,7 @@ public class gameManager : MonoBehaviour
     {
         var scene = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(scene);
-        
+
     }
 
     public void ReturnToPauseMenu(GameObject menu)
@@ -222,9 +222,5 @@ public class gameManager : MonoBehaviour
     {
         SetEnemiesRemaining(enemiesRemaining);
         SetRoomsCompleted(roomsCompleted);
-    }
-    public void updateGameGoal(int amount)
-    {
-
     }
 }
