@@ -133,7 +133,7 @@ public class gameManager : MonoBehaviour
         gameHasBooted = false; // Reset the flag
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        SceneManager.LoadScene("Main Menu");
+        SceneManager.LoadScene("Levels/Main Menu");
     }
 
     public void OpenWinMenu()
