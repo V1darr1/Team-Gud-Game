@@ -65,9 +65,6 @@ public class RoomController : MonoBehaviour
             // Unlock remaining doors. If your Door has a permanent lock guard,
             // Unlock() will naturally skip sealed doors.
             foreach (var d in doors) d.Unlock();
-          
-            gameManager.instance.roomsClearedThisRun++;
-            gameManager.instance.OnRoomCleared?.Invoke();
         }
     }
 }

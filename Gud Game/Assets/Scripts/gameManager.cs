@@ -103,6 +103,8 @@ public class gameManager : MonoBehaviour
 
         RefreshAllUI();                 // show 0/0 at boot
         SetRoomsCompleted(0);           // start-of-run baseline
+
+        MusicManager.Instance.PlayMusic("MainMenu");
     }
 
     void Update()
@@ -115,6 +117,12 @@ public class gameManager : MonoBehaviour
         HealthAndMana();
     }
 
+
+    public void Play()
+    {
+        MusicManager.Instance.PlayMusic("MainMenu");
+        
+    }
     public void PauseGame(GameObject menu)
     {
         isPaused = true;
@@ -127,6 +135,7 @@ public class gameManager : MonoBehaviour
         Time.timeScale = 0;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        MusicManager.Instance.PlayMusic("MainMenu");
     }
 
     public void UnpauseGame()
@@ -139,6 +148,7 @@ public class gameManager : MonoBehaviour
         Time.timeScale = timeScaleOrig;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        MusicManager.Instance.PlayMusic("Play Music");
     }
    
     public void ReturnToMainMenu()
@@ -157,6 +167,7 @@ public class gameManager : MonoBehaviour
     {
         var scene = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(scene);
+        
     }
 
     public void ReturnToPauseMenu(GameObject menu)
@@ -229,7 +240,7 @@ public class gameManager : MonoBehaviour
     {
         SetRoomsCompleted(roomsCompleted + 1);
     }
-
+    public int CurrentLevel => Mathf.Max(1, roomsClearedThisRun + 1);
     public void DecrementEnemyCount() => SetEnemiesRemaining(enemiesRemaining - 1);
     public void IncrementEnemyCount() => SetEnemiesRemaining(enemiesRemaining + 1);
 

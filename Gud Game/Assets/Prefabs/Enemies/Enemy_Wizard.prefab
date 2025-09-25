@@ -138,6 +138,7 @@ GameObject:
   m_Component:
   - component: {fileID: 391775033354987871}
   - component: {fileID: -2100728414365664573}
+  - component: {fileID: -4869476588741236327}
   - component: {fileID: 8718456405532801222}
   - component: {fileID: 7673072676877418931}
   - component: {fileID: 2310408280927805467}
@@ -183,8 +184,25 @@ MonoBehaviour:
   healthPickup: {fileID: 9181176699362758715, guid: 547ef026d8576844f9287af744958fcd, type: 3}
   manaPickup: {fileID: 3093340706528911704, guid: a468edaae5d02394b879ab90d280af6a, type: 3}
   doubleDmgPickup: {fileID: 4795615329670273777, guid: 3489854c64e534c448206908d237e25d, type: 3}
+  healthChance: 0.25
+  manaChance: 0.25
+  doubleChance: 0.15
   spawnHeight: 0.4
   scatter: 0.3
+--- !u!114 &-4869476588741236327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6336622660393287550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8f55194e8ed4b14d984da039a75e61a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DifficultyScaler
+  healthPerLevel: 10
+  damagePerLevel: 2
 --- !u!114 &8718456405532801222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,6 +264,10 @@ MonoBehaviour:
   meleeHitRadius: 0.9
   castPoint: {fileID: 4696663776588838670}
   primarySpell: {fileID: 11400000, guid: b9ebd03261cbdf8478dd618eae49147b, type: 2}
+  stuckCheckInterval: 0.25
+  stuckIfSpeedBelow: 0.05
+  stuckForSeconds: 0.8
+  sideStepDistance: 1.2
 --- !u!95 &2310408280927805467
 Animator:
   serializedVersion: 7
