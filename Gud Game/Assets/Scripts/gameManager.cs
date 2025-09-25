@@ -223,4 +223,8 @@ public class gameManager : MonoBehaviour
         SetEnemiesRemaining(enemiesRemaining);
         SetRoomsCompleted(roomsCompleted);
     }
+    public void SprintToggler()
+    {
+        playerController.sprintToggle = !playerController.sprintToggle;
+    }
 }

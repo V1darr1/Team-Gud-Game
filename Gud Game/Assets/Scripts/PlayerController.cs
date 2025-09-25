@@ -28,7 +28,8 @@ public class PlayerController : MonoBehaviour, iSpellCaster
     public void SetInputEnabled(bool v) => inputEnabled = v;
 
     private int jumpCount;
-    private bool isSprinting, sprintToggle;
+    private bool isSprinting;
+    public bool sprintToggle;
 
     bool isBursting;
     float baseSpeed;
@@ -127,7 +128,15 @@ public class PlayerController : MonoBehaviour, iSpellCaster
 
     void sprint()
     {
-        isSprinting = Input.GetButton("Sprint");
+        if (Input.GetButton("Sprint"))
+        {
+            isSprinting = true;
+        } else if(isSprinting && !Input.GetButton("Sprint") && sprintToggle)
+        {
+            return;
+        }
+        else { isSprinting = false; }
+        
     }
 
 
@@ -185,10 +194,10 @@ public class PlayerController : MonoBehaviour, iSpellCaster
         Vector3 spawnPos = origin + direction;
         GameObject projGO = Instantiate(spell.ProjectilePrefab, spawnPos, Quaternion.LookRotation(direction));
 
-        var projectile = projGO.GetComponent<SimpleProjectile>();
+        var projectile = projGO.GetComponent<iProjectile>();
         if (projectile != null)
         {
-            projectile.Init(damage: spell.Damage, direction: direction);
+            projectile.Init(damage: spell.Damage, direction: direction, gameObject);
         }
         else
         {
@@ -285,10 +294,9 @@ public class PlayerController : MonoBehaviour, iSpellCaster
         var proj = projGO.GetComponent<iProjectile>();
         if (proj != null)
         {
-            // Pass our damage, direction, and our own GameObject as the owner.
-            proj.Init(spell.Damage, direction, gameObject);
+            // Pass our damage, direction, and our own GameObject as the owner
             float scaledDamage = spell.Damage * damageMultiplier;
-            projectile.Init(scaledDamage, direction);
+            proj.Init(scaledDamage, direction, gameObject);
         }
         else
         {
