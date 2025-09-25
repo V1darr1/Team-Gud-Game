@@ -64,12 +64,12 @@ public class gameManager : MonoBehaviour
     private void Start()
     {
         // This check runs only the very first time the game is loaded from the editor.
-        if (!gameHasBooted)
+        /*if (!gameHasBooted)
         {
             gameHasBooted = true;
             SceneManager.LoadScene("Main Menu");
             return;
-        }
+        }*/
 
         // The rest of the Start() code will only run after a player clicks "New Game"
         // in the Main Menu scene.
@@ -134,7 +134,7 @@ public class gameManager : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadScene("Main Menu");
-        MusicManager.Instance.PlayMusic("MainMenu");
+        
     }
 
     public void OnNewGame()
