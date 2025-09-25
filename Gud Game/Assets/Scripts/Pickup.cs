@@ -3,12 +3,17 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class Pickup : MonoBehaviour
 {
-    public enum PickupType { Health, Mana, DoubleDamage }
+    public enum PickupType { Health, Mana, DoubleDamage, DoubleSpeed, Shield }
     public PickupType type = PickupType.Health;
     public float amount = 25f;
-    public bool consumeIfFull = false;
+    public float speedBoostMultiplier = 2.0f;
+    public float speedBoostDuration = 10f;
+    public bool consumeIfFull = false, DoubleSpeedactive, ShieldActive, DoubleDamage;
+
 
     public float doubleDamageDuration = 10f;
+    public float shieldDefenseMultiplier = 0.5f;
+    public float shieldDuration = 10f;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -40,15 +45,26 @@ public class Pickup : MonoBehaviour
                 }
                 break;
 
-            case PickupType.DoubleDamage:
-                var controller = playerRoot.GetComponentInChildren<PlayerController>();
-                if (controller != null)
+            case PickupType.DoubleSpeed:
+                var speedController = playerRoot.GetComponentInChildren<PlayerController>();
+                if (speedController != null)
                 {
-                    controller.StartCoroutine(controller.ApplyDoubleDamage(doubleDamageDuration));
+                    // Start the new coroutine from the PlayerController.
+                    speedController.StartCoroutine(speedController.ApplySpeedBoost(speedBoostDuration, speedBoostMultiplier));
+                    consumed = true;
+                }
+                break;
+
+            case PickupType.Shield:
+                var player = playerRoot.GetComponentInChildren<PlayerController>();
+                if (player != null)
+                {
+                    player.StartCoroutine(player.ApplyShield(shieldDuration, shieldDefenseMultiplier));
                     consumed = true;
                 }
                 break;
         }
+
         if (consumed)
             Destroy(gameObject);
     }

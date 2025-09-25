@@ -32,6 +32,7 @@ public class PlayerEffects : MonoBehaviour
             if (t != null && t.IsAlive) { t.ApplyDamage(aoeDamage); applied++; }
         }
         
+        Destroy(aoeVFX);
     }
 }
 

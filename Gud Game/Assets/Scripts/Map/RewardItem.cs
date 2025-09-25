@@ -7,7 +7,7 @@ public class RewardItem : ScriptableObject
     [TextArea] public string description;
     public Sprite icon;
 
-    public enum RewardType { TripleBurst, AOEOnHit, SpeedPercent }
+    public enum RewardType { TripleBurst, AOEOnHit, SpeedPercent, AddMaxHP, AddMaxMana }
     public RewardType rewardType;
 
    
