@@ -3,10 +3,11 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [SerializeField] MusicManager musicManager;
     private void Awake()
     {
         // This is the most reliable place to call a singleton's method.
-        MusicManager.Instance.PlayMusic("MainMenu");
+        musicManager.PlayMusic("MainMenu");
     }
 
     public void StartNewGame()
