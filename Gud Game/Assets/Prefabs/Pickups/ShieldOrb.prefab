@@ -52,8 +52,11 @@ MonoBehaviour:
   speedBoostMultiplier: 2
   speedBoostDuration: 10
   consumeIfFull: 0
+  DoubleSpeedactive: 0
+  ShieldActive: 0
+  DoubleDamage: 0
   doubleDamageDuration: 10
-  shieldDefenseMultiplier: 1000
+  shieldDefenseMultiplier: 0
   shieldDuration: 10
 --- !u!33 &3394240510207618111
 MeshFilter:

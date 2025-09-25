@@ -8,7 +8,8 @@ public class Pickup : MonoBehaviour
     public float amount = 25f;
     public float speedBoostMultiplier = 2.0f;
     public float speedBoostDuration = 10f;
-    public bool consumeIfFull = false;
+    public bool consumeIfFull = false, DoubleSpeedactive, ShieldActive, DoubleDamage;
+
 
     public float doubleDamageDuration = 10f;
     public float shieldDefenseMultiplier = 0.5f;

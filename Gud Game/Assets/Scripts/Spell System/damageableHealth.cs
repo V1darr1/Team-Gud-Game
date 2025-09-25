@@ -37,7 +37,7 @@ public class DamageableHealth : MonoBehaviour, iDamageable
         float finalDamag = amount * defenseMultiplier;
 
         // Reduce health by the damage amount (never below 0).
-        _health = Mathf.Max(0f, _health - Mathf.Max(0f, amount));
+        _health = Mathf.Max(0f, _health - Mathf.Max(0f, finalDamag));
 
         // Print simple feedback to the Console so you can see it working.
         Debug.Log($"{name} took {amount} damage. HP: {_health}/{maxHealth}");
