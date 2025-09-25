@@ -256,13 +256,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31e0d2c84431b0942932ea56738b2639, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DropOrbsOnDeath
-  dropChance: 0.25
   healthPickup: {fileID: 9181176699362758715, guid: 547ef026d8576844f9287af744958fcd, type: 3}
   manaPickup: {fileID: 3093340706528911704, guid: a468edaae5d02394b879ab90d280af6a, type: 3}
   doubleDmgPickup: {fileID: 4795615329670273777, guid: 3489854c64e534c448206908d237e25d, type: 3}
-  healthChance: 0.25
-  manaChance: 0.25
-  doubleChance: 0.15
+  DoubleSpeedPickup: {fileID: 6624752376109605455, guid: dc329ed0e5256444e93f270f2e56c7b1, type: 3}
+  shieldPickup: {fileID: 124323121614217358, guid: ba4ab179f862e3f43b7da6ad412bf48f, type: 3}
+  DropChance: 58
+  PickupCount: 5
   spawnHeight: 0.4
   scatter: 0.3
 --- !u!95 &8673746140320868096
@@ -302,6 +302,7 @@ MonoBehaviour:
   maxHealth: 100
   destroyOnDeath: 1
   canBeHealed: 0
+  defenseMultiplier: 1
 --- !u!114 &5368378755852368894
 MonoBehaviour:
   m_ObjectHideFlags: 0

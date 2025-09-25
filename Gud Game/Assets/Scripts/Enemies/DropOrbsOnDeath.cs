@@ -2,15 +2,16 @@ using UnityEngine;
 
 public class DropOrbsOnDeath : MonoBehaviour
 {
-    [Range(0f, 1f)] public float dropChance = 0.25f;
+    //[Range(0f, 1f)] public float dropChance = 0.25f;
     [Header("Orb Prefabs")]
     [SerializeField] public GameObject healthPickup;
     [SerializeField] public GameObject manaPickup;
     [SerializeField] public GameObject doubleDmgPickup;
+    [SerializeField] public GameObject DoubleSpeedPickup;
+    [SerializeField] public GameObject shieldPickup;
 
-    [SerializeField, Range(0f, 1f)] private float healthChance = 0.25f;
-    [SerializeField, Range(0f, 1f)] private float manaChance = 0.25f;
-    [SerializeField, Range(0f, 1f)] private float doubleChance = 0.15f;
+    [SerializeField, Range(0, 100)] private int DropChance = 33;
+    [SerializeField] private int PickupCount = 5;//count of all usable pickups
 
     [Header("Spawn tuning")]
     [SerializeField] public float spawnHeight = 0.4f;
@@ -32,27 +33,25 @@ public class DropOrbsOnDeath : MonoBehaviour
 
     void HandleDeath(DamageableHealth _)
     {
-        // roll between 0–1
-        float roll = Random.value;
+        // roll between 0–100
+        int roll = Random.Range(0, 100);
         GameObject prefab = null;
 
-        if (roll < healthChance)
+        if (roll <= DropChance)
         {
-            prefab = healthPickup;
+            int drop = roll % PickupCount;
+            switch (drop)
+            {
+                case 0: prefab = healthPickup; break;
+                case 1: prefab = manaPickup; break;
+                case 2: prefab = doubleDmgPickup; break;
+                case 3: prefab = DoubleSpeedPickup; break;
+                case 4: prefab = shieldPickup; break;
+                default: break;
+            }
+
         }
-        else if (roll < healthChance + manaChance)
-        {
-            prefab = manaPickup;
-        }
-        else if (roll < healthChance + manaChance + doubleChance)
-        {
-            prefab = doubleDmgPickup;
-        }
-        else
-        {
-            // no drop
-            return;
-        }
+
 
         if (!prefab) return;
 
