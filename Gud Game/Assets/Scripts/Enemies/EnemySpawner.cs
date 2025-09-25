@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    [SerializeField] EnemyStatMultiplyer statMultiplier;
+
     [SerializeField] GameObject objectToSpawn;
     [SerializeField] int numToSpawn;
     [SerializeField] float spawnRate;

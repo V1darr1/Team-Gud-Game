@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13f1a09e5dee22449b627696f5dc4091, type: 3}
   m_Name: Test Multiplyer
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStatMultiplyer
-  enemyModel: {fileID: 0}
-  healthMultiplier: 0
-  damageMultiplier: 0
-  sightRange: 0
-  attackRange: 0
+  enemyModel: {fileID: 480986361276647568, guid: 6a10da98fd138fd4a9336649726ab01c, type: 3}
+  healthMultiplier: 1
+  damageMultiplier: 1.5
+  sightRange: 2.7
+  attackRange: 2.5
