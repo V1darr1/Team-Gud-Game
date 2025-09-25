@@ -342,6 +342,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1b2187350d6b8fa42a2c904f694cc9f3, type: 2}
   - {fileID: 11400000, guid: 98fbe987d43ab0e4ebb586d5c0fb8fa6, type: 2}
   - {fileID: 11400000, guid: 49ad2ffe127a3dc47ae66251cc4a366c, type: 2}
+  - {fileID: 11400000, guid: 0c85a3e2d9c39f74481e881636b34208, type: 2}
   doorOffset: 4
   keepRooms: 1
 --- !u!4 &514450702

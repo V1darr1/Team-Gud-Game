@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13f1a09e5dee22449b627696f5dc4091, type: 3}
+  m_Name: Test Multiplyer
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyStatMultiplyer
+  enemyModel: {fileID: 480986361276647568, guid: 6a10da98fd138fd4a9336649726ab01c, type: 3}
+  healthMultiplier: 1
+  damageMultiplier: 1.5
+  sightRange: 2.7
+  attackRange: 2.5
