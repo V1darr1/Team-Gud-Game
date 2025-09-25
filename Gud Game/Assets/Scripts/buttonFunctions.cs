@@ -1,22 +1,23 @@
-using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class buttonFunctions : MonoBehaviour
 {
     [SerializeField] private CameraController cameraController;
 
-    public void startGame()
-    {
-        gameManager.instance.UnpauseGame();
-    }
 
     public void resume()
     {
         gameManager.instance.UnpauseGame();
     }
-
-    public void returnToMainMenu()
+    public void RestartGame()
     {
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    public void ReturnToMainMenu()
+    {
+
         gameManager.instance.ReturnToMainMenu();
     }
 
@@ -27,27 +28,12 @@ public class buttonFunctions : MonoBehaviour
 
     public void InvertYOn()
     {
-        if(cameraController != null) cameraController.SetInvertY(true);
+        if (cameraController != null) cameraController.SetInvertY(true);
     }
 
     public void InvertYOff()
     {
         if (cameraController != null) cameraController.SetInvertY(false);
-    }
-
-    public void newGame()
-    {
-        StartCoroutine(NewGameRoutine());
-    }
-
-    private IEnumerator NewGameRoutine()
-    {
-        gameManager.instance.OnNewGame();
-
-        // wait a second or two so rooms reset & player gets placed
-        yield return new WaitForSeconds(1.5f);
-
-        gameManager.instance.UnpauseGame();
     }
 
     public void quit()

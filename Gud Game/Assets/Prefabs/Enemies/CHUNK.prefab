@@ -124,9 +124,13 @@ MonoBehaviour:
   healthPickup: {fileID: 9181176699362758715, guid: 547ef026d8576844f9287af744958fcd, type: 3}
   manaPickup: {fileID: 3093340706528911704, guid: a468edaae5d02394b879ab90d280af6a, type: 3}
   doubleDmgPickup: {fileID: 4795615329670273777, guid: 3489854c64e534c448206908d237e25d, type: 3}
+  DoubleSpeedPickup: {fileID: 6624752376109605455, guid: dc329ed0e5256444e93f270f2e56c7b1, type: 3}
+  shieldPickup: {fileID: 124323121614217358, guid: ba4ab179f862e3f43b7da6ad412bf48f, type: 3}
   healthChance: 0.2
   manaChance: 0.2
   doubleChance: 0.1
+  doublespeedChance: 0.15
+  shieldChance: 0.15
   spawnHeight: 0.4
   scatter: 0.3
 --- !u!114 &-1949307556276708453

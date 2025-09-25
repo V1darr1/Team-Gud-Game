@@ -1,5 +1,5 @@
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
+
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour, iSpellCaster
@@ -33,7 +33,9 @@ public class PlayerController : MonoBehaviour, iSpellCaster
     bool isBursting;
     float baseSpeed;
     float maxSpeedCap = 0f;
-
+    private float speedMultiplier = 1f;
+    private float defenseMultiplier = 1f;
+    private DamageableHealth healthComponent;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -41,6 +43,7 @@ public class PlayerController : MonoBehaviour, iSpellCaster
         controller = GetComponent<CharacterController>();
         _mana = manaMax;
         baseSpeed = speed; // remember original speed once
+        healthComponent = GetComponent<DamageableHealth>();
     }
 
     // Update is called once per frame
@@ -75,36 +78,36 @@ public class PlayerController : MonoBehaviour, iSpellCaster
             playerVel.y -= gravity * Time.deltaTime;
         }
 
-        
+
         float ix = Input.GetAxis("Horizontal");
         float iz = Input.GetAxis("Vertical");
 
-        
+
         const float deadzone = 0.2f;
         if (Mathf.Abs(ix) < deadzone) ix = 0f;
         if (Mathf.Abs(iz) < deadzone) iz = 0f;
 
-        
+
         Vector3 input = new Vector3(ix, 0f, iz);
         if (input.sqrMagnitude > 1f) input.Normalize();
 
-        
+
         moveDir = (transform.right * input.x) + (transform.forward * input.z);
 
-       
-        float sprintMult = isSprinting ? sprintMod : 1f;
 
+        float sprintMult = isSprinting ? sprintMod : 1f;
         var upgrades = GetComponent<PlayerUpgrades>();
         float upgradeMult = upgrades ? (1f + upgrades.speedPercentBonus) : 1f;
 
-        
-        float finalSpeed = baseSpeed * sprintMult * upgradeMult;
 
-        
+        float finalSpeed = baseSpeed * speedMultiplier * sprintMult * upgradeMult;
+
+
         if (maxSpeedCap > 0f) finalSpeed = Mathf.Min(finalSpeed, maxSpeedCap);
 
-       
+        // Apply the movement.
         controller.Move(moveDir * finalSpeed * Time.deltaTime);
+
         jump();
         controller.Move(playerVel * Time.deltaTime);
     }
@@ -217,7 +220,36 @@ public class PlayerController : MonoBehaviour, iSpellCaster
 
         damageMultiplier = 1f;
     }
-    
+    public IEnumerator ApplySpeedBoost(float duration, float speedBoostMultiplier)
+    {
+        // Multiply the base speed
+        baseSpeed = (int)(speed * speedBoostMultiplier);
+        Debug.Log($"Speed boosted to: {baseSpeed}.");
+
+        yield return new WaitForSeconds(duration);
+
+        // Reset the base speed to the original value
+        baseSpeed = speed;
+        Debug.Log($"Speed boost ended. Speed reset to: {baseSpeed}.");
+    }
+    public IEnumerator ApplyShield(float duration, float newDefenseMultiplier)
+    {
+
+        if (healthComponent != null)
+        {
+            healthComponent.defenseMultiplier = newDefenseMultiplier;
+            Debug.Log("Shield applied! Damage taken is reduced.");
+        }
+
+        yield return new WaitForSeconds(duration);
+
+        if (healthComponent != null)
+        {
+            healthComponent.defenseMultiplier = 1f; // Reset to normal
+            Debug.Log("Shield expired. Defense is back to normal.");
+        }
+    }
+
     // Quick checks: enough mana and cooldown ready.
     public bool CanCast(iSpell spell)
     {
@@ -263,12 +295,12 @@ public class PlayerController : MonoBehaviour, iSpellCaster
     }
 
 
-   /* IEnumerator flashDamage()
-    {
-        gameManager.instance.playerDamageFlash.SetActive(true);
-        yield return new WaitForSeconds(0.1f);
-        gameManager.instance.playerDamageFlash.SetActive(false);
-    }*/
+    /* IEnumerator flashDamage()
+     {
+         gameManager.instance.playerDamageFlash.SetActive(true);
+         yield return new WaitForSeconds(0.1f);
+         gameManager.instance.playerDamageFlash.SetActive(false);
+     }*/
 
 
     //Expose current health for UI.

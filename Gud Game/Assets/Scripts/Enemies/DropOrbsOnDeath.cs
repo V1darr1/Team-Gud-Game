@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class DropOrbsOnDeath : MonoBehaviour
@@ -7,10 +8,14 @@ public class DropOrbsOnDeath : MonoBehaviour
     [SerializeField] public GameObject healthPickup;
     [SerializeField] public GameObject manaPickup;
     [SerializeField] public GameObject doubleDmgPickup;
+    [SerializeField] public GameObject DoubleSpeedPickup;
+    [SerializeField] public GameObject shieldPickup;
 
     [SerializeField, Range(0f, 1f)] private float healthChance = 0.25f;
     [SerializeField, Range(0f, 1f)] private float manaChance = 0.25f;
     [SerializeField, Range(0f, 1f)] private float doubleChance = 0.15f;
+    [SerializeField, Range(0f, 1f)] private float doublespeedChance = 0.15f;
+    [SerializeField, Range(0f, 1f)] private float shieldChance = 0.15f;
 
     [Header("Spawn tuning")]
     [SerializeField] public float spawnHeight = 0.4f;
@@ -47,6 +52,14 @@ public class DropOrbsOnDeath : MonoBehaviour
         else if (roll < healthChance + manaChance + doubleChance)
         {
             prefab = doubleDmgPickup;
+        }
+        else if (roll < healthChance + manaChance + doubleChance + doublespeedChance)
+        {
+            prefab = DoubleSpeedPickup;
+        }
+        else if (roll < healthChance + manaChance + doubleChance + doublespeedChance + shieldChance)
+        {
+            prefab = shieldPickup;
         }
         else
         {

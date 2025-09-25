@@ -14,7 +14,7 @@ public class DamageableHealth : MonoBehaviour, iDamageable
     [SerializeField] private bool destroyOnDeath = true;
 
     [Tooltip("If true, the object can be healed by any target.")]
-    [SerializeField] private bool canBeHealed =false;
+    [SerializeField] private bool canBeHealed = false;
 
     // Tracks the current health at runtime.
     private float _health;
@@ -27,11 +27,14 @@ public class DamageableHealth : MonoBehaviour, iDamageable
         // When the object spawns, set current health to the maximum.
         _health = Mathf.Max(1f, maxHealth); // Ensure it's at least 1 to avoid starting dead by mistake.
     }
+    public float defenseMultiplier = 1f;
 
     public void ApplyDamage(float amount)
     {
         // If already dead, ignore any further hits.
         if (!IsAlive) return;
+
+        float finalDamag = amount * defenseMultiplier;
 
         // Reduce health by the damage amount (never below 0).
         _health = Mathf.Max(0f, _health - Mathf.Max(0f, amount));
@@ -69,7 +72,7 @@ public class DamageableHealth : MonoBehaviour, iDamageable
         }
 
         if (destroyOnDeath)
-        { 
+        {
             // Destroy this entire GameObject (basic behavior).
             // If you have a ragdoll or animation, replace this with custom logic.
             Destroy(gameObject);
@@ -88,7 +91,7 @@ public class DamageableHealth : MonoBehaviour, iDamageable
     {
         maxHealth = Mathf.Max(1f, newMax);
 
-        if(refillCurrent)
+        if (refillCurrent)
         {
             _health = maxHealth;
         }
