@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class RewardEveryNRooms : MonoBehaviour
 {
-    [SerializeField] int roomsPerChoice = 1;      // set 1 for testing; 3 for real
+    [SerializeField] int roomsPerChoice = 3;      // set 1 for testing; 3 for real
     [SerializeField] RewardUI rewardUI;           // assign in Inspector
     [SerializeField] RewardItem[] pool;           // your 3 assets
 
@@ -105,9 +105,10 @@ public class RewardEveryNRooms : MonoBehaviour
                 break;
 
             case RewardItem.RewardType.SpeedPercent:
-                upgrades.AddSpeedPercent(r.value);
-                Debug.Log($"[Rewards] Applied Speed +{r.value}%");
+                upgrades.AddSpeedPercent(r.value); 
+                Debug.Log($"[Rewards] Applied Speed +{r.value}% -> total={upgrades.speedPercentBonus:P0}");
                 break;
+
         }
     }
 
