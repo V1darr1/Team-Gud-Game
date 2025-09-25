@@ -84,7 +84,19 @@ public class DamageableHealth : MonoBehaviour, iDamageable
         _health = Mathf.Min(maxHealth, _health + Mathf.Max(0f, amount));
         Debug.Log($"{name} healed {amount}. HP: {_health}/{maxHealth}");
     }
+    public void SetMaxHealth(float newMax, bool refillCurrent)
+    {
+        maxHealth = Mathf.Max(1f, newMax);
 
+        if(refillCurrent)
+        {
+            _health = maxHealth;
+        }
+        else
+        {
+            _health = Mathf.Min(_health, maxHealth);
+        }
+    }
     IEnumerator damageFlash()
     {
         gameManager.instance.playerDamageFlash.SetActive(true);

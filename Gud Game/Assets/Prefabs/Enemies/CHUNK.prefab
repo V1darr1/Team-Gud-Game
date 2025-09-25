@@ -74,6 +74,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3869149309404912749}
   - component: {fileID: 2963657037380974114}
+  - component: {fileID: -1949307556276708453}
   - component: {fileID: 8844903710380513664}
   - component: {fileID: 5448857396956410756}
   - component: {fileID: 7507017556198069229}
@@ -125,6 +126,20 @@ MonoBehaviour:
   doubleDmgPickup: {fileID: 4795615329670273777, guid: 3489854c64e534c448206908d237e25d, type: 3}
   spawnHeight: 0.4
   scatter: 0.3
+--- !u!114 &-1949307556276708453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480986361276647568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8f55194e8ed4b14d984da039a75e61a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DifficultyScaler
+  healthPerLevel: 10
+  damagePerLevel: 2
 --- !u!114 &8844903710380513664
 MonoBehaviour:
   m_ObjectHideFlags: 0
