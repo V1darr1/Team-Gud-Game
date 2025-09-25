@@ -19,6 +19,8 @@ public class buttonFunctions : MonoBehaviour
     {
 
         gameManager.instance.ReturnToMainMenu();
+
+        MusicManager.Instance.PlayMusic("MainMenu");
     }
 
     public void openSettingsMenu()

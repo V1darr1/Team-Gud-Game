@@ -133,7 +133,28 @@ public class gameManager : MonoBehaviour
         gameHasBooted = false; // Reset the flag
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        SceneManager.LoadScene("Levels/Main Menu");
+        SceneManager.LoadScene("Main Menu");
+        MusicManager.Instance.PlayMusic("MainMenu");
+    }
+
+    public void OnNewGame()
+    {
+        var scene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(scene);
+
+    }
+
+    public void ReturnToPauseMenu(GameObject menu)
+    {
+        PauseGame(menu);
+
+        var cam = mainCam != null ? mainCam : Camera.main;
+        if (cam != null) cam.ResetProjectionMatrix();
+    }
+
+    public void updateGameGoal(int amount)
+    {
+
     }
 
     public void OpenWinMenu()
@@ -201,9 +222,5 @@ public class gameManager : MonoBehaviour
     {
         SetEnemiesRemaining(enemiesRemaining);
         SetRoomsCompleted(roomsCompleted);
-    }
-    public void updateGameGoal(int amount)
-    {
-
     }
 }
