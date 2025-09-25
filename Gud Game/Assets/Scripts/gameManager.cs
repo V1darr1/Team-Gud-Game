@@ -43,6 +43,7 @@ public class gameManager : MonoBehaviour
 
     void Awake()
     {
+
         if (instance == null)
         {
             instance = this;
@@ -53,6 +54,7 @@ public class gameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
     }
 
     private void OnDestroy()
@@ -62,6 +64,7 @@ public class gameManager : MonoBehaviour
 
     private void Start()
     {
+
         timeScaleOrig = Time.timeScale;
         player = GameObject.FindWithTag("Player");
         playerController = player.GetComponent<PlayerController>();

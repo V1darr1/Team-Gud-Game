@@ -54,7 +54,7 @@ public class buttonFunctions : MonoBehaviour
         // wait a second or two so rooms reset & player gets placed
         yield return new WaitForSeconds(1.5f);
 
-        SceneManager.LoadScene("Levels/Playable Map");
+        SceneManager.LoadScene("Levels/Presentation Map");
 
         gameManager.instance.UnpauseGame();
 
