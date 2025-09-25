@@ -2,14 +2,20 @@ using UnityEngine;
 
 public class DropOrbsOnDeath : MonoBehaviour
 {
-    [Range(0f, 1f)] public float dropChance = 0.25f;
+    //[Range(0f, 1f)] public float dropChance = 0.25f;
     [Header("Orb Prefabs")]
-    public GameObject healthPickup;
-    public GameObject manaPickup;
+    [SerializeField] public GameObject healthPickup;
+    [SerializeField] public GameObject manaPickup;
+    [SerializeField] public GameObject doubleDmgPickup;
+    [SerializeField] public GameObject DoubleSpeedPickup;
+    [SerializeField] public GameObject shieldPickup;
+
+    [SerializeField, Range(0, 100)] private int DropChance = 33;
+    [SerializeField] private int PickupCount = 5;//count of all usable pickups
 
     [Header("Spawn tuning")]
-    public float spawnHeight = 0.4f;
-    public float scatter = 0.3f;
+    [SerializeField] public float spawnHeight = 0.4f;
+    [SerializeField] public float scatter = 0.3f;
 
     DamageableHealth _hp;
 
@@ -27,14 +33,30 @@ public class DropOrbsOnDeath : MonoBehaviour
 
     void HandleDeath(DamageableHealth _)
     {
-        if (Random.value >= dropChance) return;
+        // roll between 0–100
+        int roll = Random.Range(0, 100);
+        GameObject prefab = null;
 
-        bool dropHealth = Random.value < 0.5f;
-        var prefab = dropHealth ? healthPickup : manaPickup;
+        if (roll <= DropChance)
+        {
+            int drop = roll % PickupCount;
+            switch (drop)
+            {
+                case 0: prefab = healthPickup; break;
+                case 1: prefab = manaPickup; break;
+                case 2: prefab = doubleDmgPickup; break;
+                case 3: prefab = DoubleSpeedPickup; break;
+                case 4: prefab = shieldPickup; break;
+                default: break;
+            }
+
+        }
+
+
         if (!prefab) return;
 
         var pos = transform.position
-            +Vector3.up * spawnHeight
+            + Vector3.up * spawnHeight
             + new Vector3(Random.Range(-scatter, scatter), 0f, Random.Range(-scatter, scatter));
 
         Instantiate(prefab, pos, Quaternion.identity);

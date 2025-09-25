@@ -264,7 +264,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 906839090406665950}
-  - component: {fileID: 8168929154987576890}
   - component: {fileID: 4576721401138698413}
   - component: {fileID: 4170590715840880432}
   - component: {fileID: 7503090324557390076}
@@ -293,31 +292,6 @@ Transform:
   - {fileID: 2746132351899766083}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8168929154987576890
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5969513556859298474}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db7f10e36ad7c6a418c05214ac4a9250, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MageAi
-  agent: {fileID: 7503090324557390076}
-  model: {fileID: 1175902023069571044}
-  headPos: {fileID: 6871062910905521632}
-  castPoint: {fileID: 8018807296016376696}
-  animator: {fileID: 4170590715840880432}
-  primarySpell: {fileID: 11400000, guid: b9ebd03261cbdf8478dd618eae49147b, type: 2}
-  HP: 50
-  faceTargetSpeed: 10
-  FOV: 180
-  sightRange: 12
-  attackRange: 8
-  attackCooldown: 1.5
-  projectileSpeed: 10
 --- !u!114 &4576721401138698413
 MonoBehaviour:
   m_ObjectHideFlags: 0

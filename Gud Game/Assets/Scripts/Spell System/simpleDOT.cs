@@ -5,16 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class SimpleDOT : MonoBehaviour
 {
-    [Tooltip("Damage per second while inside.")]
     public float damagePerSecond = 15f;
-
-    [Tooltip("Only damage objects with this tag (usually 'Player'). Leave empty to affect any iDamageable.")]
     public string onlyAffectTag = "Player";
-
-    [Tooltip("If true, require the tag above to match.")]
     public bool requireTagMatch = true;
 
-    // Track loops by target root so we can stop them even if colliders get disabled/destroyed.
+    // Track by root transform, so one coroutine per target
     private readonly Dictionary<Transform, Coroutine> _running = new();
 
     private void Reset()
@@ -26,20 +21,19 @@ public class SimpleDOT : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.isTrigger) return;
-
         if (requireTagMatch && !string.IsNullOrEmpty(onlyAffectTag) && !other.CompareTag(onlyAffectTag))
             return;
 
-        var damageable = other.GetComponentInParent<iDamageable>() as Component;
-        if (!damageable) return;
+        var comp = other.GetComponentInParent<iDamageable>() as Component;
+        if (!comp) return;
 
-        var key = damageable.transform.root;
-        if (_running.ContainsKey(key)) return;
+        var key = comp.transform.root;
+        if (_running.ContainsKey(key)) return; // already ticking
 
-        var i = damageable.GetComponent<iDamageable>();
-        if (i == null) return;
+        var dmg = comp.GetComponent<iDamageable>();
+        if (dmg == null) return;
 
-        _running[key] = StartCoroutine(DamageLoop(i));
+        _running[key] = StartCoroutine(DamageLoop(dmg));
     }
 
     private void OnTriggerExit(Collider other)

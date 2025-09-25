@@ -15,5 +15,5 @@ MonoBehaviour:
   id: e_firebolt
   manaCost: 0
   cooldown: 1.5
-  damage: 20
-  projectilePrefab: {fileID: 8069041786549752062, guid: 57774967ba1669c4e8dd957015179090, type: 3}
+  damage: 25
+  projectilePrefab: {fileID: 8069041786549752062, guid: 8b095051ad220e9458539edb77a844b4, type: 3}

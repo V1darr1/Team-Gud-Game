@@ -9,6 +9,7 @@ public class RoomController : MonoBehaviour
     private IRoomObjective[] _objectives;
     private int _completedCount;
 
+
     void Awake()
     {
         // Auto-find doors if not assigned

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6823d3ac29530de48a4b86ef1ad6e1a6
+guid: e9b26c8e047b7154aae9f9aeb4c6da07
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -109,8 +109,8 @@ ModelImporter:
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 326752
-  packageName: Free Low Poly Cubic Humans - 3D by Shokubutsu
+  productId: 322530
+  packageName: Cubic Characters - Low poly 3D by Shokubutsu
   packageVersion: 1.0
   assetPath: Assets/Shokubutsu Studio/Free Low Poly Cubic Humans/Models/Characters/Knights/Knight_01.fbx
-  uploadId: 773318
+  uploadId: 766413

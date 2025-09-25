@@ -15,5 +15,5 @@ MonoBehaviour:
   roomPrefab: {fileID: 1681269289796068635, guid: d3236587621d05546b54d8123caa0392, type: 3}
   sockets:
   - A
-  - B
+  - C
   weight: 1

@@ -1,8 +1,21 @@
-This is The free Version of the Cubic Low Poly Pack
+Thank you VERY much for Purchasing The CLP Human Pack and I Hope it will serve all Your purposes in Your Projects.
 
-Give it a little twirl, see if you like it and see if that'll Motivate you to Purchase the Full pack, I would really appreciate it and that would motivate me to make more of these assets 
 
-Thank you very much for your time
+A few Things to Note :
 
-Make Indie Games Great Again
-~Shokubutsu
+
+For Clarification, Each weapon Type should be Parented to the dedicated Bone and Since The 2 Handed Weapons are in contact with Both hands, This serve to clarify Which Bone has the Full control 
+
+- Great Swords : Weapon Parented to the Right Arm
+- Spears and Halberds : Weapon Parented to The right Arm
+- Bows : Weapon Parented to The Left arm 
+
+
+All the Other weapons should be Pretty Straight forward and The Preview Pictures AND video should give you an Idea on how they work. 
+
+
+Again, Thank you Very much for your download, It would really be Nice to Leave a rating and review as it helps out a lot, And ANY suggestions You might have for my future Packs In this Art style if that's something you Fancy, well you do since you Purchased it to begin with, hahah. 
+
+Make Indie Games Great again
+Happy Game making 
+~ Shokubutsu ~

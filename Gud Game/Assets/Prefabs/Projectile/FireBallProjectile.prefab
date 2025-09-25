@@ -41,7 +41,7 @@ VisualEffect:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3201525072016459578}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 74a608127a9fbfe4a834dd7af42aae98, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: ffb0d770c6e15044aa4781fb3e0682e5, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -243,8 +243,7 @@ MeshRenderer:
   m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 74a608127a9fbfe4a834dd7af42aae98, type: 3}
+  m_Materials: []
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
