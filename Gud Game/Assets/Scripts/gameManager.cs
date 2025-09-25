@@ -134,6 +134,27 @@ public class gameManager : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadScene("Main Menu");
+        MusicManager.Instance.PlayMusic("MainMenu");
+    }
+
+    public void OnNewGame()
+    {
+        var scene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(scene);
+        
+    }
+
+    public void ReturnToPauseMenu(GameObject menu)
+    {
+        PauseGame(menu);
+
+        var cam = mainCam != null ? mainCam : Camera.main;
+        if (cam != null) cam.ResetProjectionMatrix();
+    }
+
+    public void updateGameGoal(int amount)
+    {
+
     }
 
     public void OpenWinMenu()
